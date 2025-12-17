@@ -1,0 +1,624 @@
+<!-- application.html -->
+<div class="min-h-screen bg-[#E7ECF7] rounded-[16px] p-6">
+  <div class="mx-auto">
+    <!-- Header -->
+    <div class="p-4 flex items-center justify-between">
+      <button
+        (click)="goBack()"
+        class="flex items-center gap-2 text-[#3B82F6] hover:text-blue-700 font-bold"
+      >
+        <i class="pi pi-arrow-left"></i>
+        Ortga qaytish
+      </button>
+
+      <h1 class="text-xl font-bold text-[#3B82F6] flex-1 text-center uppercase">
+        Kechiktirib yoki bo'lib-bo'lib to'lash uchun ariza
+      </h1>
+
+      <div class="w-32"></div>
+    </div>
+
+    <div class="bg-white py-6 px-[30px] rounded-xl">
+      <form [formGroup]="paymentForm" (ngSubmit)="openConfirmDialog()">
+        <!-- UMUMIY MA'LUMOT -->
+        <div class="mb-10 px-6 py-4 relative border rounded-xl border-dashed border-[#3B82F6]">
+          <div class="flex items-center gap-2 mb-6 absolute top-[-15px] bg-[#ffffff] px-3">
+            <span class="text-lg font-semibold text-gray-800">━</span>
+            <h2 class="text-lg font-semibold text-gray-800 uppercase">Umumiy ma'lumot</h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+            <!-- Hududiy boshqarma -->
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Hududiy boshqarmani tanlang</label>
+              <p-select
+                formControlName="hududiyBoshqarma"
+                [options]="regions"
+                optionLabel="name"
+                size="small"
+                class="w-full"
+                [filter]="true"
+                placeholder="Tanlang"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('hududiyBoshqarma') }"
+                appendTo="body"
+              ></p-select>
+            </div>
+
+            <!-- Arizachi nomi -->
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Arizachi nomi</label>
+              <input
+                type="text"
+                pInputText
+                pSize="small"
+                formControlName="arizachiNomi"
+                class="w-full"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('arizachiNomi') }"
+              />
+            </div>
+
+            <!-- STIR/JSHSHIR -->
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">STIR/JSHSHIR</label>
+              <input
+                type="text"
+                pInputText
+                pSize="small"
+                formControlName="stir"
+                class="w-full"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('stir') }"
+              />
+            </div>
+
+            <!-- Telefon raqami -->
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Telefon raqami</label>
+              <input
+                type="text"
+                pInputText
+                pSize="small"
+                formControlName="telefonRaqami"
+                class="w-full"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('telefonRaqami') }"
+              />
+            </div>
+
+            <!-- Asosiy bank hisobraqami -->
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Asosiy bank hisobraqami</label>
+              <input
+                type="text"
+                pInputText
+                pSize="small"
+                formControlName="asosiyBankHisobraqami"
+                class="w-full"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('asosiyBankHisobraqami') }"
+              />
+            </div>
+
+            <!-- Bank MFO -->
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Bank MFOsi va nomi</label>
+              <p-select
+                formControlName="bankMFO"
+                [options]="banks"
+                optionLabel="name"
+                size="small"
+                placeholder="Bank tanlang"
+                class="w-full"
+                [filter]="true"
+                filterBy="name"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('bankMFO') }"
+              ></p-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOJXONA TO'LOVLARI -->
+        <div class="mb-6 px-6 py-4 relative border rounded-xl border-dashed border-[#3B82F6]">
+          <div class="flex items-center gap-2 mb-6 absolute top-[-15px] bg-[#ffffff] px-3">
+            <span class="text-lg font-semibold text-gray-800">━</span>
+            <h2 class="text-lg font-semibold text-gray-800 uppercase">
+              Bojxona to'lovlari va qonunchilik hujjati to'g'risida ma'lumotlar
+            </h2>
+          </div>
+
+          <!-- Radio buttons va form -->
+          <div class="grid grid-cols-1 md:grid-cols-7 gap-4 mb-4 mt-4 items-end">
+            <div class="flex gap-2 md:col-span-2">
+              <div class="flex items-center">
+                <p-radioButton
+                  name="paymentType"
+                  value="kechiktirib"
+                  [(ngModel)]="paymentType"
+                  [ngModelOptions]="{ standalone: true }"
+                  inputId="kechiktirib"
+                ></p-radioButton>
+                <label for="kechiktirib" class="ml-2">Kechiktirib</label>
+              </div>
+
+              <div class="flex items-center">
+                <p-radioButton
+                  name="paymentType"
+                  value="bolib"
+                  [(ngModel)]="paymentType"
+                  [ngModelOptions]="{ standalone: true }"
+                  inputId="bolib"
+                ></p-radioButton>
+                <label for="bolib" class="ml-2">Bo'lib-bo'lib to'lash</label>
+              </div>
+            </div>
+
+            <div class="md:col-span-1">
+              <label class="block text-md text-[#697BB1] mb-2">Ta'minot turi nomi</label>
+              <input
+                type="text"
+                pInputText
+                pSize="small"
+                formControlName="taminotTuri"
+                class="w-full"
+                placeholder="Value"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('taminotTuri') }"
+              />
+            </div>
+
+            <div class="md:col-span-1">
+              <label class="block text-md text-[#697BB1] mb-2">Ta'minot hujjat raqami</label>
+              <input
+                type="text"
+                pInputText
+                pSize="small"
+                formControlName="taminotHujjatRaqami"
+                class="w-full"
+                placeholder="1012025"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('taminotHujjatRaqami') }"
+              />
+            </div>
+
+            <div class="md:col-span-1">
+              <label class="block text-md text-[#697BB1] mb-2">Ta'minot hujjat sanasi</label>
+              <p-date-picker
+                formControlName="taminotHujjatSanasi"
+                [showIcon]="true"
+                size="small"
+                dateFormat="dd.mm.yy"
+                placeholder="dd.mm.yyyy"
+                fluid
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('taminotHujjatSanasi') }"
+              ></p-date-picker>
+            </div>
+
+            <div class="md:col-span-1">
+              <label class="block text-md text-[#697BB1] mb-2">Amal qilish muddati</label>
+              <p-date-picker
+                formControlName="amalQilishMuddati"
+                [showIcon]="true"
+                size="small"
+                dateFormat="dd.mm.yy"
+                placeholder="dd.mm.yyyy"
+                fluid
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('amalQilishMuddati') }"
+              ></p-date-picker>
+            </div>
+
+            <div class="md:col-span-1">
+              <label class="block text-md text-[#697BB1] mb-2">Ta'minot summasi</label>
+              <p-inputNumber
+                formControlName="taminotSummasi"
+                mode="decimal"
+                size="small"
+                [useGrouping]="true"
+                placeholder="Value"
+                styleClass="w-full"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('taminotSummasi') }"
+              ></p-inputNumber>
+            </div>
+          </div>
+
+          <!-- Bojxona to'lovi form -->
+          <div class="mb-4 pt-4">
+            <div class="relative my-4">
+              <div
+                class="flex items-center justify-between mb-4 border-b border-dashed border-[#008CFA]"
+              ></div>
+              <div class="flex justify-center w-full">
+                <h3
+                  class="text-base font-semibold text-blue-600 absolute top-[-13px] bg-[#ffffff] px-3"
+                >
+                  Bojxona to'lovi
+                </h3>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg border-gray-200 mb-4">
+              <div class="grid grid-cols-1 md:grid-cols-7 gap-4 mb-3">
+                <div>
+                  <label class="block text-md text-[#697BB1] mb-1">To'lov turi</label>
+                  <input
+                    type="text"
+                    pSize="small"
+                    pInputText
+                    [(ngModel)]="currentBojxona.tolovTuri"
+                    [ngModelOptions]="{ standalone: true }"
+                    class="w-full text-md"
+                    placeholder="Bojxona boji"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-md text-[#697BB1] mb-1">Summasi</label>
+                  <p-inputNumber
+                    [(ngModel)]="currentBojxona.summasi"
+                    [ngModelOptions]="{ standalone: true }"
+                    mode="decimal"
+                    size="small"
+                    [useGrouping]="true"
+                  ></p-inputNumber>
+                </div>
+
+                <div>
+                  <label class="block text-md text-[#697BB1] mb-1">Muddati</label>
+                  <input
+                    type="text"
+                    pSize="small"
+                    pInputText
+                    [(ngModel)]="currentBojxona.muddati"
+                    [ngModelOptions]="{ standalone: true }"
+                    class="w-full text-md"
+                    placeholder="60 kun"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-md text-[#697BB1] mb-1">Tugash sanasi</label>
+                  <p-date-picker
+                    [(ngModel)]="currentBojxona.tugashSanasi"
+                    [ngModelOptions]="{ standalone: true }"
+                    [showIcon]="true"
+                    size="small"
+                    dateFormat="dd.mm.yy"
+                    placeholder="dd.mm.yyyy"
+                    fluid
+                  ></p-date-picker>
+                </div>
+
+                <div>
+                  <label class="block text-md text-[#697BB1] mb-1">Manba turi</label>
+                  <input
+                    type="text"
+                    pSize="small"
+                    pInputText
+                    [(ngModel)]="currentBojxona.manbaTuri"
+                    [ngModelOptions]="{ standalone: true }"
+                    class="w-full text-md"
+                    placeholder="Hujjatlar reysteri"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-md text-[#697BB1] mb-1">Huquqiy asos</label>
+                  <input
+                    type="text"
+                    pSize="small"
+                    pInputText
+                    [(ngModel)]="currentBojxona.huquqiyAsos"
+                    [ngModelOptions]="{ standalone: true }"
+                    class="w-full text-md"
+                    placeholder="TK 329/5/3 dan 20.01.2016"
+                  />
+                </div>
+
+                <div class="flex items-end flex-col">
+                  <label class="block text-md text-[#697BB1] opacity-0 mb-1">q</label>
+                  <p-button
+                    icon="pi pi-plus"
+                    label="Qo'shish"
+                    size="small"
+                    (onClick)="addToTable()"
+                    type="button"
+                  ></p-button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="bg-white mt-3">
+            <p-table
+              [value]="tableData"
+              [paginator]="tableData.length > 10"
+              [rows]="10"
+              [rowHover]="true"
+              [showCurrentPageReport]="true"
+              currentPageReportTemplate="Jami {totalRecords} ta dan {first}-{last} gacha"
+              [rowsPerPageOptions]="[10, 20, 50]"
+              [scrollable]="true"
+              scrollHeight="500px"
+              styleClass="p-datatable-sm p-datatable-gridlines"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Imkoniyat turi</th>
+                  <th>To'lov turi</th>
+                  <th>Summasi</th>
+                  <th>Muddati</th>
+                  <th>Tugash sanasi</th>
+                  <th>Huquqiy asos</th>
+                  <th>Amal</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+                <tr class="hover:bg-gray-50">
+                  <td>{{ item.imkoniyatTuri }}</td>
+                  <td class="text-blue-600 font-medium">{{ item.tolovTuri }}</td>
+                  <td class="text-right font-semibold">{{ formatNumber(item.summasi) }}</td>
+                  <td>{{ item.muddati }}</td>
+                  <td>{{ item.tugashSanasi }}</td>
+                  <td class="text-xs">{{ item.huquqiyAsos }}</td>
+                  <td>
+                    <div class="flex gap-2 justify-center">
+                      <button
+                        type="button"
+                        (click)="editTableRow(rowIndex)"
+                        class="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                        title="Tahrirlash"
+                      >
+                        <i class="pi pi-pencil"></i>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="deleteTableRow(rowIndex)"
+                        class="p-2 text-red-600 hover:bg-red-50 rounded"
+                        title="O'chirish"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="7" class="text-center py-8">
+                    <i class="pi pi-info-circle text-3xl text-gray-400 mb-2"></i>
+                    <div class="text-gray-500">Ma'lumotlar topilmadi</div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+
+        <!-- HUJJATLAR -->
+        <div class="mb-6 px-6 py-4 relative border rounded-xl border-dashed border-[#3B82F6]"_>
+          <div class="flex items-center gap-2 mb-6 absolute top-[-15px] bg-[#ffffff] px-3">
+            <span class="text-lg font-semibold text-gray-800">━</span>
+            <h2 class="text-lg font-semibold text-gray-800 uppercase">
+              Bojxona to'lovlarini kechiktirib yoki bo'lib-bo'lib to'lash imkoniyatiga ega bo'lishni
+              tasdiqlovchi boshqa hujjatlar
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Hujjat nomi</label>
+              <input
+                type="text"
+                pInputText
+                pSize="small"
+                formControlName="hujjatNomi"
+                class="w-full"
+                placeholder="Ustav hujjati"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('hujjatNomi') }"
+              />
+            </div>
+
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Hujjat raqami</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="hujjatRaqami"
+                pSize="small"
+                class="w-full"
+                placeholder="101"
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('hujjatRaqami') }"
+              />
+            </div>
+
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2">Sanasi</label>
+              <p-date-picker
+                formControlName="hujjatSanasi"
+                [showIcon]="true"
+                dateFormat="dd.mm.yy"
+                size="small"
+                placeholder="dd.mm.yyyy"
+                class="w-full"
+                fluid
+                [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('hujjatSanasi') }"
+              ></p-date-picker>
+            </div>
+
+            <div>
+              <label class="block text-md text-[#697BB1] mb-2 font-medium">Asos fayl</label>
+              <div class="relative">
+                <input
+                  #fileInput
+                  type="file"
+                  class="hidden"
+                  (change)="onFileChange($event)"
+                  accept=".pdf,.doc,.docx,.jpg,.png"
+                />
+                <div
+                  class="w-full border border-[#CBD5E1] rounded-md cursor-pointer overflow-hidden"
+                  (click)="fileInput.click()"
+                >
+                  <div class="flex items-center justify-between px-4">
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                      <div
+                        class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                        [ngClass]="selectedFile ? 'bg-blue-100' : 'bg-gray-100'"
+                      >
+                        <i
+                          [class]="
+                            selectedFile ? 'pi pi-check text-blue-600' : 'pi pi-file text-gray-400'
+                          "
+                        ></i>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p
+                          class="text-sm truncate"
+                          [ngClass]="selectedFile ? 'text-gray-900 font-medium' : 'text-gray-400'"
+                        >
+                          {{ selectedFile ? selectedFile.name : 'Fayl tanlang...' }}
+                        </p>
+                        <p *ngIf="selectedFile" class="text-[10px] text-gray-500 mt-0">
+                          {{ formatFileSize(selectedFile.size) }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 ml-3">
+                      <button
+                        *ngIf="selectedFile"
+                        type="button"
+                        (click)="removeFile($event)"
+                        class="px-2 text-red-600 hover:bg-red-50 rounded-md"
+                        title="O'chirish"
+                      >
+                        <i class="pi pi-times"></i>
+                      </button>
+                      <div class="px-2 py-[5px] text-blue-600 bg-blue-50 rounded-md">
+                        <i class="w-4 h-4 pi pi-upload"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="mt-2 text-xs text-gray-500">PDF, DOC, DOCX, JPG, PNG (Maksimal 10MB)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            pButton
+            label="Jo'natish"
+            icon="pi pi-send"
+            class="p-button-primary"
+          ></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Dialog -->
+<p-dialog
+  [(visible)]="showConfirmDialog"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="max-w-[800px] text-[#F2553C] text-center"
+  header="ESLATMA"
+>
+  <div class="p-4">
+    <!-- Static Table -->
+    <div class="mb-4 overflow-x-auto">
+      <table class="w-full border-collapse text-sm">
+        <thead>
+          <tr class="bg-gray-50">
+            <th class="border border-gray-300 px-3 py-2 text-left">Bojxona to'lovi turi</th>
+            <th class="border border-gray-300 px-3 py-2 text-left">Qonunchilik hujjat</th>
+            <th class="border border-gray-300 px-3 py-2 text-left">Foiz</th>
+            <th class="border border-gray-300 px-3 py-2 text-left">Asos</th>
+            <th class="border border-gray-300 px-3 py-2 text-left">Ta'minot</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-3 py-2">Bojxona boji</td>
+            <td class="border border-gray-300 px-3 py-2">TK 329/5/2<br />20.01.2016</td>
+            <td class="border border-gray-300 px-3 py-2">
+              Qayta moliyalashtirisn stavkasining 50 foizi miqdorida
+            </td>
+            <td class="border border-gray-300 px-3 py-2">Bojxona kodeksining 332-moddasi</td>
+            <td class="border border-gray-300 px-3 py-2">Talab etiladi</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-3 py-2">QQS</td>
+            <td class="border border-gray-300 px-3 py-2">TK 329/5/2<br />20.01.2016</td>
+            <td class="border border-gray-300 px-3 py-2">
+              Qayta moliyalashtirisn stavkasining 100 foizi miqdorida
+            </td>
+            <td class="border border-gray-300 px-3 py-2">Soliq kodeksining 100-moddasi</td>
+            <td class="border border-gray-300 px-3 py-2">Talab etilmaydi</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Checkboxes -->
+    <div class="space-y-3">
+      <div class="flex items-start gap-2">
+        <p-checkbox [(ngModel)]="agreement1" [binary]="true" inputId="agreement1"></p-checkbox>
+        <label for="agreement1" class="text-sm text-gray-700 leading-tight">
+          Kechiktirish yoki bo'lib-bo'lib to'lashga ruxsat berilgan bojxona to'lovlarini o'z vaqtida
+          to'lanmagan taqdirda Bojxona kodeksining 349-moddasi 1-bandiga muvofiq qonun hujjatlarida
+          belgilangan kun uchun to'lovlarni to'lash bo'yicha qarzlarlik summasining shu paytda
+          amalda bo'lgan O'zbekiston Respublikasi Markaziy bankining qayta moliyalash stavkasining
+          uch yuzdan biriga teng miqdorida penya hisoblanadi.
+        </label>
+      </div>
+
+      <div class="flex items-start gap-2">
+        <p-checkbox [(ngModel)]="agreement2" [binary]="true" inputId="agreement2"></p-checkbox>
+        <label for="agreement2" class="text-sm text-gray-700 leading-tight">
+          Bojxona to'lovlarini kechiktirib yoki bo'lib-bo'lib to'lash bo'yicha qonunchilik va ushbu
+          buyilishga nisbatan bo'lgan javobgarlik bilan tanishganman hamda mazkur majburiyatlarga
+          rioya qilinmagan taqdirda qonunchilikda belgilangan javobgarlikka tortilishga roziman.
+        </label>
+      </div>
+
+      <div class="flex items-start gap-2">
+        <p-checkbox [(ngModel)]="agreement3" [binary]="true" inputId="agreement3"></p-checkbox>
+        <label for="agreement3" class="text-sm text-gray-700 leading-tight">
+          Kechiktirish yoki bo'lib-bo'lib to'lashga ruxsat berilgan bojxona to'lovlarini o'z vaqtida
+          to'lash majburiyati olaman
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2 mt-4">
+        <p-checkbox
+          [(ngModel)]="agreementAll"
+          [binary]="true"
+          inputId="agreementAll"
+          (onChange)="toggleAllAgreements($event)"
+        ></p-checkbox>
+        <label for="agreementAll" class="text-sm font-medium text-blue-600">
+          Yuqoridagi majburiyatlarga roziman
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-center gap-3">
+      <p-button
+        label="Jo'natish"
+        icon="pi pi-send"
+        (onClick)="submitForm()"
+        [disabled]="!allAgreementsChecked()"
+        [ngClass]="{ 'opacity-50 cursor-not-allowed': !allAgreementsChecked() }"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!--TOASTS-->
+<p-toast />

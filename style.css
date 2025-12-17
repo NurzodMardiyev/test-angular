@@ -1,0 +1,10 @@
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  #receipt {
+    width: 58mm; /* yoki 80mm */
+    font-size: 12px;
+  }
+}

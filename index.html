@@ -1,0 +1,48 @@
+<style>
+  @page {
+    size: 80mm auto; /* kenglikni belgilaymiz, balandlik contentga qarab */
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  #receipt {
+    width: 80mm;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+
+  #receipt h2 {
+    text-align: center;
+    margin: 0 0 5px 0;
+    font-size: 14px;
+  }
+
+  #receipt p {
+    margin: 2px 0;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px dashed #000;
+    margin: 5px 0;
+  }
+</style>
+
+<div id="receipt">
+  <h2>One Med Klinikasi</h2>
+  <p>Chek raqami: #12345</p>
+  <p>Ism: Otabek</p>
+  <p>Xizmat: Konsultatsiya</p>
+  <p>Summa: 120 000 so‘m</p>
+  <hr />
+  <p style="text-align: center">Rahmat!</p>
+  <br /><br /><br /><br /><br />
+  <!-- uzun qilish uchun -->
+</div>
+
+<button onclick="window.print()">Chop etish</button>

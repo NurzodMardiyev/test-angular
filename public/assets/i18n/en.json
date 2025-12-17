@@ -1,0 +1,35 @@
+{
+  "app": {
+    "main": "CUSTOMS",
+    "header": "PAYMENT SERVICES",
+    "llc": "Yuksalish Avto LLC",
+    "balance": "Balance",
+    "jshshir": "PIN",
+    "logout": "Logout",
+    "sections": "Sections",
+    "home": "Home"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "refund": "Refund",
+    "classifier": "Classifier",
+    "services": "Services",
+    "generalSupply": "General Supply",
+    "myApplications": "My Applications",
+    "decisions": "Decisions",
+    "customsPreDecision": "Preliminary decision on customs preferences",
+    "preferenceApplications": "Preference Applications",
+    "newApplication": "New Application",
+    "additionalInfo": "Additional Information",
+    "stats": "Statistics",
+    "classification": "Classification",
+    "preliminaryFunds": "Preliminary Funds",
+    "comparativeAct": "Comparative Act"
+  },
+  "main": {
+    "typeRequest": "By types of requests",
+    "typeServices": "By type of services",
+    "dataMoney": "Information on financial funds",
+    "allRequest": "Total requests"
+  }
+}

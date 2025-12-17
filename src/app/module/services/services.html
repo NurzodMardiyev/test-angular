@@ -1,0 +1,86 @@
+<div class="filter-tabs">
+
+  <div class="tab"
+       [class.active]="activeFilter === 'all'"
+       (click)="setFilter('all')">
+    Barchasi
+  </div>
+
+  <div class="tab"
+       [class.active]="activeFilter === 'free'"
+       (click)="setFilter('free')">
+    Bepul
+    <span class="badge blue">{{ freeCount }}</span>
+  </div>
+
+  <div class="tab"
+       [class.active]="activeFilter === 'paid'"
+       (click)="setFilter('paid')">
+    Pullik
+    <span class="badge orange">{{ paidCount }}</span>
+  </div>
+
+</div>
+
+
+<div class="grid grid-cols-12 gap-4">
+
+
+  <div class="service-card col-span-4" *ngFor="let s of filteredServices">
+
+    <div class="card-head">
+      <img class="head-icon" [src]="s.icon" />
+      <h3>{{ s.title }}</h3>
+    </div>
+
+    <p class="desc"
+       [class.expanded]="s.isExpanded"
+       (click)="toggleDesc(s)">
+      {{ s.desc }}
+    </p>
+
+
+    <div class="card-content">
+
+      <div class="left">
+        <div class="info-item">
+          <img src="/assets/icons/xizmat_narxi.svg" />
+          <span>Xizmat narxi <b>{{ s.type === 'free' ? 'Bepul' : 'Pullik' }}</b></span>
+        </div>
+
+        <div class="info-item">
+          <img src="/assets/icons/xizmat_muddati.svg" />
+          <span>Xizmat muddati <b>Avtomat</b></span>
+        </div>
+
+        <div class="info-item">
+          <img src="/assets/icons/xizmatdan_foydalanuvchi.svg" />
+          <span>Xizmatdan foydalanuvchi <b><br>Jismoniy va yuridik shaxslar</b></span>
+        </div>
+
+        <div class="info-item">
+          <img src="/assets/icons/tashkilot.svg" />
+          <span>Tashkilot <b>Bojxona qo‘mitasi </b></span>
+        </div>
+      </div>
+
+      <div class="right">
+        <iframe
+          class="video-frame"
+          [src]="s.safeEmbed"
+          allowfullscreen
+          allow="autoplay"
+        ></iframe>
+
+      </div>
+
+
+    </div>
+
+    <button class="card-btn" (click)="goToSplit(s.button)">Xizmatdan foydalanish</button>
+
+  </div>
+
+
+</div>
+

@@ -1,0 +1,111 @@
+<div class="min-h-screen flex flex-col bg-gray-100">
+  <!-- Main content -->
+  <main class="flex-1 p-4 overflow-y-auto">
+    <p-card>
+      <router-outlet></router-outlet>
+    </p-card>
+  </main>
+
+  <!-- Bottom Bar -->
+  <footer
+    class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white flex items-center justify-between px-5 h-14 shadow-lg"
+  >
+    <div class="flex items-center gap-3">
+      <button (click)="toggleMenu()" class="text-2xl text-gray-300 hover:text-white transition">
+        <i class="pi pi-bars"></i>
+      </button>
+      <span class="font-semibold text-gray-100 truncate">{{ activeLabel | translate }}</span>
+    </div>
+
+    <div class="flex items-center gap-5">
+      <i class="pi pi-power-off text-xl text-gray-300"></i>
+    </div>
+  </footer>
+
+  <!-- Modal menu -->
+  <div
+    *ngIf="showMenu"
+    class="fixed inset-0 bg-black/40 flex items-end z-50"
+    (click)="toggleMenu()"
+  >
+    <div
+      class="bg-white w-full rounded-t-2xl p-4 max-h-[70vh] overflow-y-auto animate-slide-up"
+      (click)="$event.stopPropagation()"
+    >
+      <h3 class="text-lg font-semibold mb-3 text-gray-800">Bo‘limlar</h3>
+
+      <ul class="divide-y divide-gray-200">
+        <ng-container *ngFor="let item of items">
+          <li>
+            <!-- Category -->
+            <div
+              (click)="toggleDropdown(item.label!, item)"
+              [ngClass]="{
+                'menu-active': isActive(item),
+                'hover:bg-gray-100': !isActive(item)
+              }"
+              class="flex items-center justify-between py-3 cursor-pointer rounded-md px-2 transition"
+            >
+              <div class="flex items-center gap-3">
+                <i [class]="item.icon + ' text-gray-700'"></i>
+                <span class="font-medium">{{ item.label | translate }}</span>
+              </div>
+              <i
+                *ngIf="item.items?.length"
+                class="pi transition-transform duration-300"
+                [ngClass]="isOpen(item.label!) ? 'pi-chevron-down rotate-180' : 'pi-chevron-right'"
+              ></i>
+            </div>
+
+            <!-- Submenus -->
+            <ul
+              *ngIf="item.items && isOpen(item.label!)"
+              class="ml-5 border-l border-gray-200 pl-2 overflow-hidden transition-all duration-300"
+            >
+              <ng-container *ngFor="let sub of item.items">
+                <li>
+                  <div
+                    (click)="toggleDropdown(sub.label!, sub)"
+                    [ngClass]="{
+                      'submenu-active': isActive(sub),
+                      'hover:bg-gray-100 text-gray-600': !isActive(sub)
+                    }"
+                    class="flex items-center justify-between py-2 px-2 rounded-md cursor-pointer transition"
+                  >
+                    <div class="flex items-center gap-2">
+                      <i *ngIf="sub.icon" [class]="sub.icon"></i>
+                      {{ sub.label | translate }}
+                    </div>
+                    <i
+                      *ngIf="sub.items?.length"
+                      class="pi transition-transform duration-300"
+                      [ngClass]="isOpen(sub.label!) ? 'pi-chevron-down rotate-180' : 'pi-chevron-right'"
+                    ></i>
+                  </div>
+
+                  <!-- Inner submenu -->
+                  <ng-container *ngIf="sub.items && isOpen(sub.label!)">
+                    <ul class="ml-4 border-l border-gray-200 pl-2">
+                      <li
+                        *ngFor="let inner of sub.items"
+                        (click)="toggleDropdown(inner.label!, inner)"
+                        [ngClass]="{
+                          'submenu-active': isActive(inner),
+                          'hover:bg-gray-100 text-gray-500': !isActive(inner)
+                        }"
+                        class="py-2 text-sm rounded-md cursor-pointer px-2 transition"
+                      >
+                        <i *ngIf="inner.icon" [class]="inner.icon"></i>
+                        {{ inner.label | translate }}
+                      </li>
+                    </ul>
+                  </ng-container>
+                </li>
+              </ng-container>
+            </ul>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+[
+  {
+    "label": "menu.dashboard",
+    "svg": "assets/icons/dashboard.svg",
+    "routerLink": ["/main"],
+    "componentPath": "module/main/main",
+    "componentName": "Main",
+    "auth": true
+  },
+  {
+    "label": "menu.services",
+    "svg": "assets/icons/services.svg",
+    "routerLink": [
+      "/services"
+    ],
+    "componentPath": "module/dashboard/dashboard",
+    "componentName": "Dashboard"
+  },
+  {
+    "label": "menu.classifier",
+    "svg": "assets/icons/catalog.svg",
+    "routerLink": ["/catalog"],
+    "componentPath": "module/catalog/catalog",
+    "componentName": "Catalog",
+    "auth": true
+  },
+  {
+    "label": "menu.refund",
+    "svg": "assets/icons/refund.svg",
+    "routerLink": ["/refund"],
+    "componentPath": "module/refund/refund",
+    "componentName": "Refund",
+    "auth": true
+  }
+]

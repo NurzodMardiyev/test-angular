@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <title>AI X-Ray Tahlil Tizimi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #1a1a1a;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background grid */
+    .grid-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+    }
+
+    /* Header Section */
+    .header-section {
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .main-title {
+      font-size: 42px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #6b7280;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 24px;
+      padding: 40px;
+      margin: 40px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+    }
+
+    .upload-section:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15);
+    }
+
+    .upload-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .upload-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+    }
+
+    .upload-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .upload-zone {
+      border: 2px dashed #d1d5db;
+      border-radius: 16px;
+      padding: 50px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #fafafa;
+      position: relative;
+    }
+
+    .upload-zone:hover {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.03);
+    }
+
+    .upload-zone.has-file {
+      display: none;
+    }
+
+    .upload-zone-icon {
+      font-size: 64px;
+      color: #3b82f6;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    .upload-text {
+      font-size: 18px;
+      color: #374151;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .upload-hint {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .selected-file-info {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: #f0f9ff;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .selected-file-info.show {
+      display: flex;
+    }
+
+    .file-icon {
+      width: 40px;
+      height: 40px;
+      background: #3b82f6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .file-name {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e40af;
+    }
+
+    .remove-file-btn {
+      width: 32px;
+      height: 32px;
+      background: #ef4444;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .remove-file-btn:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+
+    /* Image Preview Section */
+    .image-preview-section {
+      display: none;
+      margin-top: 24px;
+      position: relative;
+    }
+
+    .image-preview-section.show {
+      display: block;
+      animation: fadeInUp 0.4s ease-out;
+    }
+
+    .preview-container {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #f9fafb;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .preview-container:hover {
+      background: #f3f4f6;
+      transform: scale(1.01);
+    }
+
+    .preview-image {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .preview-overlay {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: rgba(59, 130, 246, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s;
+    }
+
+    .preview-container:hover .preview-overlay {
+      background: rgba(16, 185, 129, 0.9);
+    }
+
+    .preview-overlay i {
+      font-size: 14px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .btn-analyze {
+      flex: 1;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-analyze:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-analyze:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-gallery {
+      flex: 1;
+      background: white;
+      color: #3b82f6;
+      border: 2px solid #3b82f6;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-gallery:hover {
+      background: #3b82f6;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Result Section */
+    .result-section {
+      display: none;
+      animation: fadeInUp 0.6s ease-out;
+      margin-top: 40px;
+    }
+
+    .result-section.show {
+      display: block;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-banner {
+      border-radius: 20px;
+      padding: 32px 40px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .result-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.1;
+      background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, currentColor 10px, currentColor 20px);
+    }
+
+    .banner-loaded {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: 3px solid #059669;
+    }
+
+    .banner-empty {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      border: 3px solid #d97706;
+    }
+
+    .result-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-content {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-confidence {
+      font-size: 20px;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+
+    .result-image-card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      display: none;
+    }
+
+    .result-image {
+      width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .result-details {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    .detail-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    /* Gallery Modal */
+    .modal-content {
+      border-radius: 24px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      border-bottom: 2px solid #e5e7eb;
+      padding: 24px 32px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      border-radius: 24px 24px 0 0;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .btn-close {
+      filter: brightness(0) invert(1);
+      opacity: 1;
+    }
+
+    .modal-body {
+      padding: 32px;
+    }
+
+    .gallery-item {
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      background: white;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+    }
+
+    .gallery-item:active {
+      transform: translateY(-4px);
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .gallery-footer {
+      padding: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #6b7280;
+      background: #f9fafb;
+      border-radius: 0 0 8px 8px;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .loading-overlay.show {
+      display: flex;
+    }
+
+    .loading-content {
+      text-align: center;
+    }
+
+    .loader {
+      width: 80px;
+      height: 80px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #3b82f6;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-title {
+        font-size: 32px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .result-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .gallery-image {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-background"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header-section">
+      <div class="ai-badge">
+        <i class="bi bi-cpu"></i>
+        <span>AI X-RAY ANALYSIS</span>
+      </div>
+      <h1 class="main-title">Rentgen Tahlil Tizimi</h1>
+      <p class="subtitle">Yuk mashinasining rentgen tasviri asosida sun'iy intellekt yordamida yukli yoki yuksizligini aniqlaymiz</p>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <div class="upload-header">
+        <div class="upload-icon">
+          <i class="bi bi-file-earmark-medical"></i>
+        </div>
+        <div>
+          <h2 class="upload-title">Rentgen Rasm Yuklash</h2>
+        </div>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="upload-zone" id="uploadZone">
+          <i class="bi bi-cloud-upload upload-zone-icon"></i>
+          <p class="upload-text">Rentgen rasmini yuklang</p>
+          <p class="upload-hint">JPG, JPEG, PNG formatlarida</p>
+          <input type="file" name="file" id="fileInput" accept=".jpg,.jpeg,.png" required>
+        </div>
+
+        <div class="image-preview-section" id="imagePreviewSection">
+          <div class="preview-container" id="previewContainer">
+            <div class="preview-overlay">
+              <i class="bi bi-arrow-repeat"></i>
+              <span>Qayta yuklash</span>
+            </div>
+            <img id="previewImage" class="preview-image" alt="Preview">
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button type="submit" class="btn-analyze" id="analyzeBtn" disabled>
+            <i class="bi bi-graph-up me-2"></i>
+            Tahlil Qilish
+          </button>
+          <button type="button" class="btn-gallery" data-bs-toggle="modal" data-bs-target="#galleryModal">
+            <i class="bi bi-folder2-open me-2"></i>
+            Galereya
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Result Section -->
+    {% if filename %}
+    <div class="result-section show">
+      <div class="result-banner {{ 'banner-loaded' if result == 'YUKLI' else 'banner-empty' }}">
+        <div class="result-icon-wrapper">
+          {{ '🚛' if result == 'YUKLI' else '📦' }}
+        </div>
+        <div class="result-content">
+          <div class="result-title">{{ result }}</div>
+          <div class="result-confidence">Ishonchlilik: {{ '%.1f'|format(confidence * 100) }}%</div>
+        </div>
+      </div>
+
+      <div class="result-details">
+        <div class="detail-row">
+          <span class="detail-label">
+            <i class="bi bi-speedometer2 me-2"></i>
+            Natija
+          </span>
+          <span class="detail-value">{{ result }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <i class="bi bi-percent me-2"></i>
+            Ishonchlilik
+          </span>
+          <span class="detail-value">{{ '%.2f'|format(confidence * 100) }}%</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <i class="bi bi-info-circle me-2"></i>
+            Holat
+          </span>
+          <span class="detail-value">{{ status }}</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Show uploaded image in preview section after page loads
+      window.addEventListener('DOMContentLoaded', function() {
+        const previewImage = document.getElementById('previewImage');
+        const imagePreviewSection = document.getElementById('imagePreviewSection');
+        const uploadZone = document.getElementById('uploadZone');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        previewImage.src = "{{ url_for('static', filename=filename) }}";
+        imagePreviewSection.classList.add('show');
+        uploadZone.classList.add('has-file');
+        analyzeBtn.disabled = false;
+      });
+    </script>
+    {% endif %}
+
+    <!-- Gallery Modal -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="galleryModalLabel">
+              <i class="bi bi-images me-2"></i>
+              Galereyadagi Rasmlar
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Yopish"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-4">
+              {% for image_name in image_list %}
+              <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="gallery-item" onclick="window.selectImage('{{ image_name }}'); event.stopPropagation();">
+                  <img src="{{ url_for('static', filename='images/' + image_name) }}" class="gallery-image" alt="{{ image_name }}">
+                  <div class="gallery-footer">{{ image_name }}</div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loader"></div>
+      <p class="loading-text">AI Tahlil qilmoqda...</p>
+    </div>
+  </div>
+
+
+
+  <script>
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const imagePreviewSection = document.getElementById('imagePreviewSection');
+    const previewImage = document.getElementById('previewImage');
+    const previewContainer = document.getElementById('previewContainer');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const uploadForm = document.getElementById('uploadForm');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    // Modal yopilgandan 100% toza bo‘lsin
+    function cleanupModalBackdrop() {
+      document.querySelectorAll(".modal-backdrop").forEach(b => b.remove());
+      document.body.classList.remove("modal-open");
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    }
+
+
+    // Click to upload
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    // Click preview to reupload
+    previewContainer.addEventListener('click', () => fileInput.click());
+
+    // File selection
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewImage.src = e.target.result;
+          imagePreviewSection.classList.add('show');
+          uploadZone.classList.add('has-file');
+          analyzeBtn.disabled = false;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Form submission
+    uploadForm.addEventListener('submit', (e) => {
+      loadingOverlay.classList.add('show');
+    });
+
+    // Gallery image selection with loading state
+    // ============================
+    //   GALEREYADAN TANLAB TAHLIL QILISH
+    // ============================
+    async function selectImage(imageName) {
+      try {
+        const modalElement = document.getElementById("galleryModal");
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) modal.hide();
+
+        // Backdropni tozalash — eng ishonchli yo‘l
+        setTimeout(cleanupModalBackdrop, 200);
+
+        const imageUrl = `/static/images/${imageName}`;
+        const blob = await fetch(imageUrl).then(r => r.blob());
+        const file = new File([blob], imageName, { type: blob.type });
+
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+
+        previewImage.src = imageUrl;
+        imagePreviewSection.classList.add("show");
+        uploadZone.classList.add("has-file");
+        analyzeBtn.disabled = false;
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+
+    // Globalga chiqaramiz
+    window.selectImage = selectImage;
+
+
+    // Drag and drop
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.style.borderColor = '#3b82f6';
+      uploadZone.style.background = 'rgba(59, 130, 246, 0.05)';
+    });
+
+    uploadZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      uploadZone.style.borderColor = '#d1d5db';
+      uploadZone.style.background = '#fafafa';
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.style.borderColor = '#d1d5db';
+      uploadZone.style.background = '#fafafa';
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        const event = new Event('change');
+        fileInput.dispatchEvent(event);
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

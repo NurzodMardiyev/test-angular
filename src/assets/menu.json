@@ -1,0 +1,130 @@
+[
+  {
+    "label": "menu.generalSupply",
+    "icon": "pi pi-book",
+    "items": [
+      {
+        "label": "menu.myApplications",
+        "routerLink": [
+          "/main"
+        ],
+        "componentPath": "module/main/main",
+        "componentName": "Main",
+        "auth": true
+      },
+      {
+        "label": "menu.decisions",
+        "routerLink": [
+          "/services"
+        ],
+        "componentPath": "module/services/services",
+        "componentName": "Services",
+        "auth": true
+      }
+    ]
+  },
+  {
+    "label": "menu.customsPreDecision",
+    "icon": "pi pi-building-columns",
+    "items": [
+      {
+        "label": "menu.preferenceApplications",
+        "items": [
+          {
+            "label": "menu.newApplication",
+            "routerLink": [
+              "/catalog"
+            ],
+            "componentPath": "module/catalog/catalog",
+            "componentName": "Catalog",
+            "auth": true
+          },
+          {
+            "label": "menu.decisions",
+            "routerLink": [
+              "/refund"
+            ],
+            "componentPath": "module/refund/refund",
+            "componentName": "Refund",
+            "auth": true
+          },
+          {
+            "label": "menu.decisions",
+            "routerLink": [
+              "/services/devided"
+            ],
+            "componentPath": "module/payment/devided/devided",
+            "componentName": "Devided",
+            "auth": true
+          },
+          {
+            "label": "Application",
+            "routerLink": [
+              "/services/devided/application"
+            ],
+            "componentPath": "module/payment/application/application",
+            "componentName": "Application",
+            "auth": true
+          }
+        ]
+      },
+      {
+        "label": "Qo‘shimcha ma’lumotlar",
+        "items": [
+          {
+            "label": "menu.stats",
+            "routerLink": [
+              "/users/preference/stats"
+            ],
+            "componentPath": "module/dashboard/dashboard",
+            "componentName": "Dashboard",
+            "auth": true
+          },
+          {
+            "label": "menu.classification",
+            "routerLink": [
+              "/users/preference/classification"
+            ],
+            "componentPath": "module/dashboard/dashboard",
+            "componentName": "Dashboard",
+            "auth": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "menu.preliminaryFunds",
+    "icon": "pi pi-file-arrow-up",
+    "items": [
+      {
+        "label": "menu.myApplications",
+        "routerLink": [
+          "/users/get-money/application"
+        ],
+        "componentPath": "module/dashboard/dashboard",
+        "componentName": "Dashboard",
+        "auth": true
+      },
+      {
+        "label": "menu.decisions",
+        "routerLink": [
+          "/users/get-money/document"
+        ],
+        "componentPath": "module/dashboard/dashboard",
+        "componentName": "Dashboard",
+        "auth": true
+      }
+    ]
+  },
+  {
+    "label": "menu.comparativeAct",
+    "icon": "pi pi-arrow-right-arrow-left",
+    "routerLink": [
+      "/deposit"
+    ],
+    "componentPath": "module/comparative/comparative",
+    "componentName": "Comparative",
+    "auth": true
+  }
+]

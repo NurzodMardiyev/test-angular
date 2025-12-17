@@ -1,0 +1,38 @@
+{
+  "app": {
+    "main": "ТАМОЖЕННЫЙ",
+    "header": "ТАМОЖЕННЫЕ УСЛУГИ",
+    "llc": "ООО «Юксалиш Авто»",
+    "jshshir": "ПИНФЛ",
+    "balance": "Баланс",
+    "logout": "Выход",
+    "sections": "Разделы",
+    "home": "Главная"
+  },
+  "menu": {
+    "dashboard": "Главная",
+    "refund": "Возврат",
+    "classifier": "Справочники",
+    "services": "Услуги",
+    "generalSupply": "Основное снабжение",
+    "myApplications": "Мои заявки",
+    "decisions": "Решения",
+    "customsPreDecision": "Предварительное решение по таможенным льготам",
+    "preferenceApplications": "Заявки на льготы",
+    "newApplication": "Новая заявка",
+    "additionalInfo": "Дополнительная информация",
+    "stats": "Статистика",
+    "classification": "Классификация",
+    "preliminaryFunds": "Предварительные денежные средства",
+    "comparativeAct": "Сравнительный акт"
+  },
+  "main": {
+    "typeRequest": "По видам обращений",
+    "typeServices": "По виду услуг",
+    "dataMoney": "Информация о денежных средств ах",
+    "allRequest": "Общее количество обращений",
+    "dividedPeyment": "",
+    "returnPeyment"
+  }
+}
+

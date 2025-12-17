@@ -1,0 +1,260 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "primeicons/primeicons.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+/***********/
+
+
+.scroll-container {
+  @apply overflow-auto;
+  width: 100%;
+  height: 100%;
+  padding-right: 17px; /* Резервируем место для вертикальной полосы прокрутки */
+  box-sizing: border-box; /* Учитываем полосу прокрутки в ширине контейнера */
+  overflow-y: auto; /* Всегда показывать вертикальную полосу прокрутки */
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 8px; /* Ширина полосы прокрутки */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgb(200, 199, 199); /* Цвет ползунка */
+  border-radius: 10px; /* Закругление углов ползунка */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background-color: transparent; /* Цвет фона полосы прокрутки */
+}
+
+
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  cursor: pointer;
+
+}
+
+.map-container svg {
+  position: absolute;
+  top: 50%;
+  left: 39%;
+  transform: translate(15%, -11%) scale(2.0);
+  transform-origin: center center;
+  width: auto;
+  height: auto;
+
+}
+
+
+//@keyframes drawPath {
+//  from {
+//    stroke-dasharray: 300;
+//    stroke-dashoffset: 300;
+//  }
+//  to {
+//    stroke-dasharray: 300;
+//    stroke-dashoffset: 0;
+//  }
+//}
+//
+//.animate-draw-path {
+//  animation: drawPath 1s ease-out forwards;
+//}
+
+//
+@keyframes growBar {
+  from {
+    height: 0%;
+  }
+  to {
+    height: var(--target-height);
+  }
+}
+
+.bar-animate {
+  //animation: growBar 1s ease-out forwards;
+}
+
+
+@keyframes growBarHorizontal {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target-width);
+  }
+}
+
+
+
+::ng-deep .tw-custom-dropdown .p-dropdown-item:hover {
+  @apply bg-blue-100;
+}
+
+::ng-deep .tw-custom-dropdown .p-dropdown-item.p-highlight {
+  @apply bg-blue-200 border-blue-500;
+}
+
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.3s ease-out;
+}
+
+/* Starfield effect */
+.starfield {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1%, transparent 1%) repeat;
+  background-size: 3px 3px;
+  animation: starfield-move 1.5s linear infinite;
+  opacity: 0.2;
+}
+
+@keyframes starfield-move {
+  0% {
+    background-position: 0 0;
+    transform: scale(1);
+  }
+  100% {
+    background-position: -500px 500px;
+    transform: scale(1.5);
+  }
+}
+
+/* Circle animations */
+@keyframes stroke-spin {
+  0% {
+    stroke-dashoffset: 0;
+    transform: rotate(0deg);
+  }
+  100% {
+    stroke-dashoffset: -295;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes stroke-spin-reverse {
+  0% {
+    stroke-dashoffset: 0;
+    transform: rotate(0deg);
+  }
+  100% {
+    stroke-dashoffset: -295;
+    transform: rotate(-360deg);
+  }
+}
+
+.animate-stroke-spin {
+  animation: stroke-spin 1.2s linear infinite;
+  transform-origin: center;
+}
+
+.animate-stroke-spin-reverse {
+  animation: stroke-spin-reverse 1s linear infinite;
+  transform-origin: center;
+}
+
+/* Pulsing image */
+@keyframes pulse-center {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse-center {
+  animation: pulse-center 2s ease-in-out infinite;
+}
+
+
+@keyframes stroke-spin {
+  0% {
+    stroke-dashoffset: 0;
+    transform: rotate(0deg);
+  }
+  100% {
+    stroke-dashoffset: -295;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes stroke-spin-reverse {
+  0% {
+    stroke-dashoffset: 0;
+    transform: rotate(0deg);
+  }
+  100% {
+    stroke-dashoffset: -295;
+    transform: rotate(-360deg);
+  }
+}
+
+.animate-stroke-spin {
+  animation: stroke-spin 1.5s linear infinite;
+  transform-origin: center;
+}
+
+.animate-stroke-spin-reverse {
+  animation: stroke-spin-reverse 1.2s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes pulse-center {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-center {
+  animation: pulse-center 2s ease-in-out infinite;
+}
+
+.last-line-card {
+  .p-card-body {
+    height: 240px;
+  }
+}
+
+
+
