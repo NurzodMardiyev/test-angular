@@ -1,0 +1,306 @@
+.table-style-v1 th {
+  background-color: color-mix(in srgb, var(--p-primary-color), transparent 70%);
+  border-right: 1.5px dashed  var(--p-primary-color) !important;
+  border-bottom: 1.5px dashed  var(--p-primary-color) !important;
+  text-align: center !important;
+}
+
+.table-style-v1-row2 th {
+  background-color: color-mix(in srgb, var(--p-primary-color), transparent 70%);
+  border-right: 1.5px dashed  var(--p-primary-color) !important;
+  border-bottom: 1.5px dashed  var(--p-primary-color) !important;
+  text-align: center !important;
+}
+
+table-style-v1_dialog {
+  background-color: color-mix(in srgb, var(--p-primary-color), transparent 10%);
+  font-size: 10px !important;
+  height: 10px !important;
+}
+
+:host ::ng-deep .saldo-row {
+  position: sticky;
+  top: 68px;
+  z-index: 20;
+}
+:host ::ng-deep {
+  .p-datepicker.p-invalid > input {
+    border-color: #ef4444 !important; /* Qizil rang */
+  }
+}
+
+/***************/
+@media screen and (max-width: 960px) {
+  :host ::ng-deep {
+    .p-datatable {
+      &.p-datatable-customers {
+        .p-datatable-thead > tr > th,
+        .p-datatable-tfoot > tr > td {
+          display: none !important;
+        }
+
+        .p-datatable-tbody > tr {
+          border-bottom: 1px solid var(--layer-2);
+
+          > td {
+            text-align: left;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            border: 0 none;
+
+            .p-column-title {
+              min-width: 30%;
+              display: inline-block;
+              font-weight: bold;
+            }
+
+            p-progressbar {
+              width: 100%;
+            }
+
+            &:last-child {
+              border-bottom: 1px solid var(--surface-d);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.custom-class-toolbar {
+  --p-toolbar-background: transparentize();
+}
+
+.p-dialog-footer {
+  margin: 0;
+  padding: 0;
+  -webkit-box-shadow: 0px 10px 14px 7px rgba(34, 60, 80, 0.33);
+  -moz-box-shadow: 0px 10px 14px 7px rgba(34, 60, 80, 0.33);
+  box-shadow: 0px 10px 14px 7px rgba(34, 60, 80, 0.33);
+}
+
+:host ::ng-deep .table-style-v1 th.filtered-column {
+  border-bottom: 3px solid #e10000 !important;
+}
+.custom-class-toolbar {
+  --p-toolbar-background: transparentize();
+}
+
+//------------------------------  //
+// createreport.scss
+
+// AG Grid custom styles
+.ag-theme-alpine {
+  --ag-header-height: 50px;
+  --ag-header-foreground-color: #1e40af;
+  --ag-header-background-color: #f3f4f6;
+  --ag-odd-row-background-color: #ffffff;
+  --ag-row-hover-color: #eff6ff;
+  --ag-border-color: #e5e7eb;
+  --ag-font-size: 13px;
+  --ag-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+
+  .ag-header-cell {
+    font-weight: 600;
+    border-right: 1px solid var(--ag-border-color);
+  }
+
+  .ag-header-center {
+    .ag-header-cell-label {
+      justify-content: center;
+    }
+  }
+
+  :host-context(.dark) {
+    .ag-theme-alpine {
+      --ag-background-color: #0f172a;          // asosiy fon
+      --ag-header-background-color: #020617;   // header
+      --ag-foreground-color: #e5e7eb;          // text
+      --ag-header-foreground-color: #e5e7eb;
+      --ag-border-color: #334155;
+      --ag-row-hover-color: #1e293b;
+    }
+  }
+
+  .ag-cell {
+    border-right: 1px solid #e5e7eb;
+    padding: 8px;
+    line-height: 1.5;
+  }
+
+  .ag-row {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .ag-row-hover {
+    background-color: var(--ag-row-hover-color) !important;
+  }
+
+  // Pagination styles
+  .ag-paging-panel {
+    border-top: 2px solid #e5e7eb;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .ag-paging-button {
+    margin: 0 4px;
+    padding: 4px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    //background: white;
+    cursor: pointer;
+
+    &:hover {
+      //background: #f3f4f6;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  // Group header styling
+  .ag-header-group-cell {
+    //background-color: #dbeafe;
+    font-weight: 700;
+    font-size: 14px;
+    border-right: 1px solid var(--ag-border-color);
+  }
+
+  // Pinned columns
+  .ag-cell-focus,
+  .ag-cell-no-focus {
+    border: none !important;
+  }
+
+
+  // Loading overlay
+  .ag-overlay-loading-wrapper {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  // No rows overlay
+  .ag-overlay-no-rows-wrapper {
+    padding: 20px;
+  }
+}
+
+// Dark mode support
+:host-context(.dark) {
+  .ag-theme-alpine {
+    --ag-background-color: #1f2937;
+    --ag-header-background-color: #374151;
+    --ag-odd-row-background-color: #1f2937;
+    --ag-header-foreground-color: #e5e7eb;
+    --ag-foreground-color: #e5e7eb;
+    --ag-border-color: #4b5563;
+    --ag-row-hover-color: #374151;
+
+    .ag-header-group-cell {
+      background-color: #1e3a8a;
+      color: #e5e7eb;
+    }
+  }
+}
+
+
+
+// Dialog custom styles
+:root .report-dialog {
+  --p-dialog-title-font-size: 10px !important;
+  .p-dialog {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .p-dialog-header {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    font-weight: 400;
+    font-size: 0.1rem;
+
+    .p-dialog-title {
+      font-size: var(--p-dialog-title-font-size);
+    }
+    #pn_id_55_header {
+      font-size: 1rem !important;
+    }
+  }
+
+  .p-dialog-content {
+    padding: 0 !important;
+  }
+}
+
+// Print styles
+@media print {
+  .ag-theme-alpine {
+    .ag-paging-panel {
+      display: none;
+    }
+  }
+
+  .report-dialog {
+    .p-dialog-header,
+    .p-dialog-footer {
+      display: none;
+    }
+  }
+}
+
+// Custom scrollbar for AG Grid
+.ag-theme-alpine {
+  .ag-body-viewport {
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      //background: #f1f1f1;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      //background: #888;
+      border-radius: 5px;
+
+      &:hover {
+        background: #555;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .ag-theme-alpine {
+    font-size: 12px;
+
+    .ag-header-cell {
+      padding: 4px;
+    }
+
+    .ag-cell {
+      padding: 4px;
+      border: 1px solid var(--ag-border-color) !important;
+    }
+  }
+}
+
+// Export button styles
+.export-buttons {
+  display: flex;
+  gap: 8px;
+
+  p-button {
+    ::ng-deep .p-button {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+  }
+}

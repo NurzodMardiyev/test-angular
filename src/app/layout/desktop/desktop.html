@@ -1,0 +1,84 @@
+<div class="h-screen flex ">
+
+<!-- FLOATING SLIM SIDEBAR -->
+  <aside
+    class="w-[106px] py-2 flex flex-col items-center gap-4 my-4 ml-4
+         rounded-2xl shadow-lg bg-white dark:bg-[var(--p-surface-900)]">
+
+
+    <!-- LOGO -->
+    <div class="w-20  rounded-xl flex items-center justify-center">
+      <img src="./assets/logo.png" alt="Logo">
+    </div>
+
+    <div class="w-full px-1">
+      <app-menues></app-menues>
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="mt-auto flex flex-col mb-2">
+      <p-button size="large" [text]="true">
+        <i class="pi pi-question-circle w-[30px]"></i>
+      </p-button>
+      <p-divider [layout]="'horizontal'"></p-divider>
+      <p-button size="large" [text]="true" (onClick)="toggle($event)">
+        <svg width="30" height="30" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.0498 37.4669C14.8915 36.1004 16.8978 35.0212 19.0688 34.2293C21.2394 33.4378 23.5498 33.042 26 33.042C28.4501 33.042 30.7605 33.4378 32.9311 34.2293C35.1021 35.0212 37.1085 36.1004 38.9501 37.4669C40.2971 35.9863 41.3643 34.2725 42.1519 32.3254C42.9395 30.3783 43.3333 28.2699 43.3333 26.0003C43.3333 21.1975 41.6451 17.108 38.2687 13.7316C34.8923 10.3552 30.8027 8.66699 26 8.66699C21.1972 8.66699 17.1076 10.3552 13.7312 13.7316C10.3548 17.108 8.66663 21.1975 8.66663 26.0003C8.66663 28.2699 9.06042 30.3783 9.848 32.3254C10.6356 34.2725 11.7028 35.9863 13.0498 37.4669ZM26.0005 27.6253C24.0223 27.6253 22.3542 26.9464 20.996 25.5887C19.6375 24.2305 18.9583 22.5624 18.9583 20.5842C18.9583 18.606 19.6372 16.9379 20.995 15.5797C22.3531 14.2212 24.0212 13.542 25.9994 13.542C27.9776 13.542 29.6457 14.2209 31.0039 15.5787C32.3624 16.9368 33.0416 18.6049 33.0416 20.5831C33.0416 22.5613 32.3627 24.2294 31.005 25.5876C29.6468 26.9461 27.9787 27.6253 26.0005 27.6253ZM26 46.5837C23.1418 46.5837 20.4605 46.0461 17.9562 44.9711C15.4519 43.8961 13.2735 42.4321 11.421 40.5793C9.56814 38.7268 8.1042 36.5484 7.02917 34.0441C5.95414 31.5398 5.41663 28.8585 5.41663 26.0003C5.41663 23.1421 5.95414 20.4609 7.02917 17.9566C8.1042 15.4523 9.56814 13.2739 11.421 11.4214C13.2735 9.5685 15.4519 8.10456 17.9562 7.02953C20.4605 5.95451 23.1418 5.41699 26 5.41699C28.8582 5.41699 31.5394 5.95451 34.0437 7.02953C36.548 8.10456 38.7264 9.5685 40.5789 11.4214C42.4318 13.2739 43.8957 15.4523 44.9707 17.9566C46.0458 20.4609 46.5833 23.1421 46.5833 26.0003C46.5833 28.8585 46.0458 31.5398 44.9707 34.0441C43.8957 36.5484 42.4318 38.7268 40.5789 40.5793C38.7264 42.4321 36.548 43.8961 34.0437 44.9711C31.5394 46.0461 28.8582 46.5837 26 46.5837ZM26 43.3337C27.9554 43.3337 29.8407 43.0191 31.656 42.3901C33.4713 41.7607 35.0832 40.8808 36.4915 39.7505C35.0832 38.6614 33.4923 37.8128 31.7189 37.2047C29.9451 36.5962 28.0388 36.292 26 36.292C23.9611 36.292 22.0514 36.5926 20.2708 37.1939C18.4901 37.7955 16.9027 38.6477 15.5084 39.7505C16.9168 40.8808 18.5286 41.7607 20.3439 42.3901C22.1592 43.0191 24.0445 43.3337 26 43.3337ZM26 24.3753C27.0779 24.3753 27.9792 24.0128 28.704 23.2877C29.4291 22.5629 29.7916 21.6616 29.7916 20.5837C29.7916 19.5057 29.4291 18.6044 28.704 17.8797C27.9792 17.1545 27.0779 16.792 26 16.792C24.922 16.792 24.0207 17.1545 23.296 17.8797C22.5708 18.6044 22.2083 19.5057 22.2083 20.5837C22.2083 21.6616 22.5708 22.5629 23.296 23.2877C24.0207 24.0128 24.922 24.3753 26 24.3753Z" class="!fill-[#2B2934] dark:!fill-[#FFFFFF]"/>
+        </svg>
+      </p-button>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="flex-1 flex flex-col px-6  pt-4 gap-4  ">
+
+    <!-- HEADER -->
+    <header class="flex items-center justify-between ">
+      <div class="md:min-w-[500px]">
+        <h1 class="text-xl font-[400] text-[#69748B] dark:text-[#838996] animated-header uppercase">{{ 'header.subtitle' | translate }}</h1>
+        <p class="font-semibold text-3xl text-[#334155] dark:text-white uppercase">{{ 'header.title' | translate }}</p>
+      </div>
+
+      <div class="flex items-center gap-3 md:min-w-[600px] justify-end">
+
+        <p-iconfield>
+          <p-inputicon class="pi pi-search" />
+          <input
+            type="text"
+            pInputText
+            placeholder="Search"
+            pSize="small"
+            class="!transition-all !duration-300"
+            [ngClass]="{'w-[300px]': expanded, '!w-[100px]': !expanded}"
+            (focus)="expanded = true"
+            (blur)="expanded = false"
+          />
+        </p-iconfield>
+
+        <theme-switcher [toTop]="false"></theme-switcher>
+
+        <app-language-switcher></app-language-switcher>
+
+        <p-button [text]="true"><i class="pi pi-bell" style="font-size: 1.2rem"></i></p-button>
+      </div>
+    </header>
+
+    <!-- CONTENT GRID -->
+    <div class="grid grid-cols-12 gap-6 flex-1 overflow-y-auto">
+      <section #animated_box class="animated-header col-span-12 rounded pr-2 min-h-[400px]">
+        <router-outlet></router-outlet>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+<p-popover  #op [appendTo]="'body'" styleClass="right-side-popover">
+  <div class="flex gap-4">
+    <div>
+      <span class="font-medium block ">
+        <app-profile></app-profile>
+      </span>
+    </div>
+  </div>
+</p-popover>

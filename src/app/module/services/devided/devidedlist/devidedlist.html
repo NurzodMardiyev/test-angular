@@ -1,0 +1,292 @@
+<!-- devided.html - To'liq PrimeNG Table bilan -->
+<p-card class="min-h-screen" [style]="{'background-color': 'color-mix(in srgb, var(--p-primary-color), transparent 94%)'}">
+  <div class="mx-auto">
+    <!-- Header -->
+    <div class="p-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 text-[#3B82F6] hover:text-blue-700 font-bold"
+        >
+          <i class="pi pi-arrow-left"></i>
+          Ortga qaytish
+        </button>
+      </div>
+
+
+
+      <h1 class="text-xl font-bold flex-1 text-center uppercase">
+        KECHIKTIRIB YOKI BO'LIB - BO'LIB TO'LASH
+      </h1>
+
+      <p-button
+        (click)="createNew()"
+      >
+        <div class="px-10">
+          Yangi ariza
+        </div>
+      </p-button>
+    </div>
+
+    <!-- Filters -->
+    <p-card class="">
+      <div class="flex items-center gap-3 flex-wrap mb-4 ">
+        <div class="border rounded-full flex items-center  flex-wrap">
+          <button
+            (click)="filterByStatus('all')"
+            class="px-10 py-2 border-r rounded-l-full"
+          >
+            <span class="text-gray-700">Jami</span>
+            <span
+            >
+            {{ filters.jami }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('yangi')"
+            class="px-10 py-2 border-r"
+          >
+            <span class="text-blue-700">Yangi</span>
+            <span
+              class="text-blue-700"
+            >
+            {{ filters.yangi }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('jarayonda')"
+            class="px-10 py-2 border-r"
+          >
+            <span class="text-yellow-700">Jarayonda</span>
+            <span
+              class="text-yellow-700"
+            >
+            {{ filters.jarayonda }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('qabul')"
+            class="px-10 py-2 border-r"
+          >
+            <span class="text-green-700">Qabul qilingan</span>
+            <span
+              class="text-green-700"
+            >
+            {{ filters.qabulQilingan }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('rad')"
+            class="px-10 py-2"
+          >
+            <span class="text-red-700">Rad etilgan</span>
+            <span
+              class="text-red-700"
+            >
+            {{ filters.radEtilgan }}
+          </span>
+          </button>
+        </div>
+
+
+        <div class="ml-auto flex gap-2">
+          <p-button
+            (click)="applyFilter()"
+            outlined
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              />
+            </svg>
+            Filtr
+          </p-button>
+
+          <p-button
+            (click)="downloadData()"
+            class=""
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            Yuklash
+          </p-button>
+        </div>
+      </div>
+
+      <!--  Yuklash buttoni -->
+      <div class="w-full justify-center flex my-4">
+        <button
+          (click)="loadTable()"
+          *ngIf="!showTable"
+          class="bg-blue-400 px-4 py-2 rounded-md text-white"
+        >
+          Ma'lumotlarni yuklash
+        </button>
+      </div>
+      <!-- PrimeNG Table -->
+      @if(showTable) {
+        <div class="" >
+          <p-table
+            #dt
+            [value]="payments"
+            [lazy]="true"
+            (onLazyLoad)="loadPayments($event)"
+            [paginator]="true"
+            [rows]="15"
+            [totalRecords]="totalRecords"
+            [loading]="loading"
+            [rowHover]="true"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{totalPages} ta dan {currentPage}-sahifa, jami {totalRecords} ta dan {first}-{last} gacha"
+            [rowsPerPageOptions]="[15, 25, 50, 100]"
+            [globalFilterFields]="['arizaRaqami', 'arizaTuri', 'taminotTuri', 'arizaHolati']"
+            [filterDelay]="500"
+            [scrollable]="true"
+            scrollHeight="700px"
+            class="p-datatable-sm p-datatable-gridlines"
+            responsiveLayout="scroll"
+          >
+            <!-- Header Template -->
+            <ng-template pTemplate="header" class="">
+              <tr class="table-style-v1">
+                <th class="text-center">
+                  T/r
+                </th>
+                <th pSortableColumn="arizaRaqami">
+                  Ariza raqami/sanasi
+                  <p-sortIcon field="arizaRaqami"></p-sortIcon>
+                  <p-columnFilter type="text" field="arizaRaqami" display="menu" />
+                </th>
+                <th pSortableColumn="arizaTuri">
+                  Ariza turi
+                  <p-sortIcon field="arizaTuri"></p-sortIcon>
+                  <p-columnFilter type="text" field="arizaTuri" display="menu" />
+                </th>
+                <th pSortableColumn="summa">
+                  Summa
+                  <p-sortIcon field="summa"></p-sortIcon>
+                  <p-columnFilter type="numeric" field="summa" display="menu" />
+                </th>
+                <th pSortableColumn="taminotTuri">
+                  Ta'minot turi
+                  <p-sortIcon field="taminotTuri"></p-sortIcon>
+                  <p-columnFilter type="text" field="taminotTuri" display="menu" />
+                </th>
+                <th pSortableColumn="taminotRaqami">
+                  Ta'minot raqami/sanasi
+                  <p-sortIcon field="taminotRaqami"></p-sortIcon>
+                  <p-columnFilter type="text" field="taminotRaqami" display="menu" />
+                </th>
+                <th pSortableColumn="arizaHolati">
+                  Ariza holati
+                  <p-sortIcon field="arizaHolati"></p-sortIcon>
+                  <p-columnFilter type="text" field="arizaHolati" display="menu" />
+                </th>
+                <th pSortableColumn="qarorRaqami">
+                  Qaror raqami/sanasi
+                  <p-sortIcon field="qarorRaqami"></p-sortIcon>
+                  <p-columnFilter type="text" field="qarorRaqami" display="menu" />
+                </th>
+                <th>Qaror miqdori/muddati</th>
+              </tr>
+            </ng-template>
+
+            <!-- Body Template -->
+            <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
+              <tr class="hover:bg-gray-100 transition-colors">
+                <td class="!text-center">
+                  {{ rowIndex + 1 + dataTableInput.start }}
+                </td>
+                <td>
+                  <div class="text-sm">
+                    <div class="font-medium ">{{ payment.arizaRaqami }}</div>
+                    <div class="text-gray-500 text-xs">{{ payment.arizaDate }}</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="text-sm text-[var(--p-primary-color)]">{{ payment.arizaTuri }}</div>
+                </td>
+                <td class="text-right">
+                  <div class="text-sm font-medium ">
+                    {{ formatNumber(payment.summa) }}
+                  </div>
+                </td>
+                <td>
+                  <div class="text-sm ">{{ payment.taminotTuri }}</div>
+                </td>
+                <td>
+                  <div class="text-sm">
+                    <div class="font-medium text-gray-900">{{ payment.taminotRaqami }}</div>
+                    <div class="text-gray-500 text-xs">{{ payment.taminotDate }}</div>
+                  </div>
+                </td>
+                <td>
+                <span
+                  class="inline-flex px-3 py-1 text-xs font-medium rounded-md border"
+                  [ngClass]="getStatusClass(payment.arizaHolatiColor)"
+                >
+                  {{ payment.arizaHolati }}
+                </span>
+                </td>
+                <td>
+                  <div class="text-sm">
+                    <div class="font-medium">{{ payment.qarorRaqami }}</div>
+                    <div class="text-gray-500 text-xs">{{ payment.qarorDate }}</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="text-sm text-gray-500">{{ payment.qarorMiqdori }}</div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <!-- Loading Template -->
+            <ng-template pTemplate="loadingbody">
+              <tr>
+                <td colspan="9">
+                  <div class="flex items-center justify-center p-4">
+                    <p-skeleton width="100%" height="3rem"></p-skeleton>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <!-- Empty Message Template -->
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="9" class="text-center py-10">
+                  <i class="pi pi-info-circle text-3xl text-gray-400 mb-2"></i>
+                  <div class="text-gray-500 text-lg">Ma'lumotlar topilmadi</div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <!-- Paginator Template (Custom) -->
+            <ng-template pTemplate="paginatorleft">
+              <div class="text-sm text-gray-700">Jami: {{ totalRecords }} ta</div>
+            </ng-template>
+
+            <ng-template pTemplate="paginatorright">
+              <div class="text-sm text-gray-600">{{ dataTableInput.length }} ta ko'rsatilmoqda</div>
+            </ng-template>
+          </p-table>
+        </div>
+      }
+
+    </p-card>
+  </div>
+</p-card>
+

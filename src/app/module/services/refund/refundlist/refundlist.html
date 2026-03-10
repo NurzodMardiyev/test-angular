@@ -1,0 +1,606 @@
+<!-- devided.html - To'liq PrimeNG Table bilan -->
+<p-card class="min-h-screen"
+        [style]="{'background-color': 'color-mix(in srgb, var(--p-primary-color), transparent 94%)'}">
+  <div class="mx-auto">
+    <!-- Header -->
+    <div class="p-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 text-[#3B82F6] hover:text-blue-700 font-bold"
+        >
+          <i class="pi pi-arrow-left"></i>
+          Ortga qaytish
+        </button>
+      </div>
+
+
+      <h1 class="text-xl font-bold flex-1 text-center uppercase">
+        Pul mablag‘larini qaytarish
+      </h1>
+
+      <p-button
+        (onClick)="showDialog()"
+      >
+        <div class="px-10">
+          Yangi ariza
+        </div>
+      </p-button>
+    </div>
+
+    <!-- Filters -->
+    <p-card class="">
+      <div class="flex items-center gap-3 flex-wrap mb-4 ">
+        <div class="border rounded-full flex items-center  flex-wrap">
+          <button
+            (click)="filterByStatus('all')"
+            class="px-10 py-2 border-r rounded-l-full"
+          >
+            <span class="text-gray-700">Jami</span>
+            <span
+            >
+            {{ filters.jami }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('yangi')"
+            class="px-10 py-2 border-r"
+          >
+            <span class="text-blue-700">Yangi</span>
+            <span
+              class="text-blue-700"
+            >
+            {{ filters.yangi }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('jarayonda')"
+            class="px-10 py-2 border-r"
+          >
+            <span class="text-yellow-700">Jarayonda</span>
+            <span
+              class="text-yellow-700"
+            >
+            {{ filters.jarayonda }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('qabul')"
+            class="px-10 py-2 border-r"
+          >
+            <span class="text-green-700">Qabul qilingan</span>
+            <span
+              class="text-green-700"
+            >
+            {{ filters.qabulQilingan }}
+          </span>
+          </button>
+
+          <button
+            (click)="filterByStatus('rad')"
+            class="px-10 py-2"
+          >
+            <span class="text-red-700">Rad etilgan</span>
+            <span
+              class="text-red-700"
+            >
+            {{ filters.radEtilgan }}
+          </span>
+          </button>
+        </div>
+
+
+        <div class="ml-auto flex gap-2">
+          <p-button
+            (click)="applyFilter()"
+            outlined
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              />
+            </svg>
+            Filtr
+          </p-button>
+
+          <p-button
+            (click)="downloadData()"
+            class=""
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            Yuklash
+          </p-button>
+        </div>
+      </div>
+
+      <!--  Yuklash buttoni -->
+      <div class="w-full justify-center flex my-4">
+        @if (!showTable) {
+          <button
+            (click)="loadTable()"
+            class="bg-blue-400 px-4 py-2 rounded-md text-white"
+          >
+            Ma'lumotlarni yuklash
+          </button>
+        }
+      </div>
+      <!-- PrimeNG Table -->
+      @if (showTable) {
+        <div class="">
+          <p-table
+            #dt
+            [value]="payments"
+            [lazy]="true"
+            (onLazyLoad)="loadPayments($event)"
+            [paginator]="true"
+            [rows]="15"
+            [totalRecords]="totalRecords"
+            [loading]="loading"
+            [rowHover]="true"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{totalPages} ta dan {currentPage}-sahifa, jami {totalRecords} ta dan {first}-{last} gacha"
+            [rowsPerPageOptions]="[15, 25, 50, 100]"
+            [globalFilterFields]="['arizaRaqami', 'arizaTuri', 'taminotTuri', 'arizaHolati']"
+            [filterDelay]="500"
+            [scrollable]="true"
+            scrollHeight="700px"
+            class="p-datatable-sm p-datatable-gridlines"
+            responsiveLayout="scroll"
+          >
+            <!-- Header Template -->
+            <ng-template pTemplate="header" class="">
+              <tr class="table-style-v1">
+                <th class="text-center">
+                  T/r
+                </th>
+                <th pSortableColumn="arizaRaqami">
+                  Ariza raqami/sanasi
+                  <p-sortIcon field="arizaRaqami"></p-sortIcon>
+                  <p-columnFilter type="text" field="arizaRaqami" display="menu"/>
+                </th>
+                <th pSortableColumn="arizaTuri">
+                  Ariza turi
+                  <p-sortIcon field="arizaTuri"></p-sortIcon>
+                  <p-columnFilter type="text" field="arizaTuri" display="menu"/>
+                </th>
+                <th pSortableColumn="summa">
+                  Summa
+                  <p-sortIcon field="summa"></p-sortIcon>
+                  <p-columnFilter type="numeric" field="summa" display="menu"/>
+                </th>
+                <th pSortableColumn="taminotTuri">
+                  Ta'minot turi
+                  <p-sortIcon field="taminotTuri"></p-sortIcon>
+                  <p-columnFilter type="text" field="taminotTuri" display="menu"/>
+                </th>
+                <th pSortableColumn="taminotRaqami">
+                  Ta'minot raqami/sanasi
+                  <p-sortIcon field="taminotRaqami"></p-sortIcon>
+                  <p-columnFilter type="text" field="taminotRaqami" display="menu"/>
+                </th>
+                <th pSortableColumn="arizaHolati">
+                  Ariza holati
+                  <p-sortIcon field="arizaHolati"></p-sortIcon>
+                  <p-columnFilter type="text" field="arizaHolati" display="menu"/>
+                </th>
+                <th pSortableColumn="qarorRaqami">
+                  Qaror raqami/sanasi
+                  <p-sortIcon field="qarorRaqami"></p-sortIcon>
+                  <p-columnFilter type="text" field="qarorRaqami" display="menu"/>
+                </th>
+                <th>Qaror miqdori/muddati</th>
+              </tr>
+            </ng-template>
+
+            <!-- Body Template -->
+            <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
+              <tr class="hover:bg-gray-100 transition-colors">
+                <td class="!text-center">
+                  {{ rowIndex + 1 + dataTableInput.start }}
+                </td>
+                <td>
+                  <div class="text-sm">
+                    <div class="font-medium ">{{ payment.arizaRaqami }}</div>
+                    <div class="text-gray-500 text-xs">{{ payment.arizaDate }}</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="text-sm text-[var(--p-primary-color)]">{{ payment.arizaTuri }}</div>
+                </td>
+                <td class="text-right">
+                  <div class="text-sm font-medium ">
+                    {{ formatNumber(payment.summa) }}
+                  </div>
+                </td>
+                <td>
+                  <div class="text-sm ">{{ payment.taminotTuri }}</div>
+                </td>
+                <td>
+                  <div class="text-sm">
+                    <div class="font-medium text-gray-900">{{ payment.taminotRaqami }}</div>
+                    <div class="text-gray-500 text-xs">{{ payment.taminotDate }}</div>
+                  </div>
+                </td>
+                <td>
+                <span
+                  class="inline-flex px-3 py-1 text-xs font-medium rounded-md border"
+                  [ngClass]="getStatusClass(payment.arizaHolatiColor)"
+                >
+                  {{ payment.arizaHolati }}
+                </span>
+                </td>
+                <td>
+                  <div class="text-sm">
+                    <div class="font-medium">{{ payment.qarorRaqami }}</div>
+                    <div class="text-gray-500 text-xs">{{ payment.qarorDate }}</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="text-sm text-gray-500">{{ payment.qarorMiqdori }}</div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <!-- Loading Template -->
+            <ng-template pTemplate="loadingbody">
+              <tr>
+                <td colspan="9">
+                  <div class="flex items-center justify-center p-4">
+                    <p-skeleton width="100%" height="3rem"></p-skeleton>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <!-- Empty Message Template -->
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="9" class="text-center py-10">
+                  <i class="pi pi-info-circle text-3xl text-gray-400 mb-2"></i>
+                  <div class="text-gray-500 text-lg">Ma'lumotlar topilmadi</div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <!-- Paginator Template (Custom) -->
+            <ng-template pTemplate="paginatorleft">
+              <div class="text-sm text-gray-700">Jami: {{ totalRecords }} ta</div>
+            </ng-template>
+
+            <ng-template pTemplate="paginatorright">
+              <div class="text-sm text-gray-600">{{ dataTableInput.length }} ta ko'rsatilmoqda</div>
+            </ng-template>
+          </p-table>
+        </div>
+      }
+
+    </p-card>
+  </div>
+</p-card>
+
+<!-- app.component.html -->
+<!-- app.component.html -->
+<p-dialog
+  appendTo="body"
+  [blockScroll]="true"
+  header="YANGI ARIZA SHAKLLANTIRISH"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{
+    width: '60vw',
+    backgroundColor: 'var(--dialog-bg)',
+    padding: '20px',
+  }"
+  [maximizable]="true"
+>
+
+  <div class="mb-6">
+    <!-- Ustki 3 ta karta -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="flex items-center gap-4 p-6 rounded-xl bg-gray-50 dark:bg-[var(--p-surface-950)]">
+        <div class="flex items-center gap-3">
+          <div class="bg-[#E7EDFF] w-16 h-16 rounded-full flex items-center justify-center">
+            <i class="pi pi-user !text-2xl text-[#396AFF]"></i>
+          </div>
+          <div>
+            <h4 class="md:text-xl font-semibold mb-2">Мурожаатчи номи</h4>
+            <p class="text-sm text-gray-500 ">Avazov Akmaljon Akbar o'g'li</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 p-6 rounded-xl bg-gray-50 dark:bg-[var(--p-surface-950)]">
+        <div class="bg-[#FFF5D9] w-16 h-16 rounded-full flex items-center justify-center">
+          <i class="pi pi-file !text-2xl text-[#FDBA38]"></i>
+        </div>
+        <div>
+          <h4 class="md:text-xl font-semibold mb-2">СТИР/ЖШШШИ</h4>
+          <p class="text-sm text-gray-500 ">326079089652241</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 p-6 rounded-xl bg-gray-50 dark:bg-[var(--p-surface-950)]">
+        <div class="bg-[#DCFAF8] w-16 h-16 rounded-full flex items-center justify-center">
+          <i class="pi pi-wallet !text-2xl text-[#16DBCC]"></i>
+        </div>
+        <div>
+          <h4 class="md:text-xl font-semibold mb-2">Qoldiq pul mablagi</h4>
+          <p class="text-sm text-gray-500 ">70 000 000,000</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form maydonlari -->
+    <form #applicationForm="ngForm" (ngSubmit)="onSubmit()" class="grid grid-cols-3 gap-6 bg-white dark:bg-[var(--p-surface-950)] p-6 rounded-xl">
+      <!-- Qaytarilayotgan pul mablagi -->
+      <div class="flex flex-col gap-2">
+        <label for="returnAmount" class="text-sm text-gray-600 dark:text-gray-300">
+          Qaytarilayotgan pul mablagi
+        </label>
+        <input
+          id="returnAmount"
+          name="returnAmount"
+          type="text"
+          pInputText
+          [(ngModel)]="formData.returnAmount"
+          placeholder="70 000 000,000"
+          required
+          pSize="small"
+          class="w-full"
+          #returnAmount="ngModel"
+          [ngClass]="{
+            'border-red-500': returnAmount.invalid && returnAmount.touched
+          }"
+        />
+      </div>
+
+      <!-- Bank MFOsi -->
+      <div class="flex flex-col gap-2">
+        <label for="mfo" class="text-sm text-gray-600 dark:text-gray-300">
+          Bank MFOsi
+        </label>
+        <div class="relative">
+          <input
+            id="mfo"
+            name="mfo"
+            type="text"
+            pSize="small"
+            pInputText
+            [(ngModel)]="formData.mfo"
+            placeholder="00107"
+            required
+            class="w-full pr-10"
+            #mfo="ngModel"
+            [ngClass]="{
+                'border-red-500': mfo.invalid && mfo.touched
+            }"/>
+          <div class=" absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer search-btn">
+            <p-button outlined size="small" class="">
+              <i class="pi pi-search text-primary cursor-pointer"
+                 (click)="searchBank()"
+                 role="button"
+                 tabindex="0"
+                 aria-label="Bankni qidirish"></i>
+            </p-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Murojatchi plastik karta raqami -->
+<!--      <div class="flex flex-col gap-2">-->
+<!--        <label for="cardNumber" class="text-sm text-gray-600 dark:text-gray-300">-->
+<!--          Murojatchi plastik karta raqami-->
+<!--        </label>-->
+<!--        <input-->
+<!--          id="cardNumber"-->
+<!--          name="cardNumber"-->
+<!--          type="text"-->
+<!--          pInputText-->
+<!--          [(ngModel)]="formData.cardNumber"-->
+<!--          placeholder="8600 3129 1255 9666"-->
+<!--          required-->
+<!--          pattern="[\d\s]+"-->
+<!--          class="w-full"-->
+<!--          #cardNumber="ngModel"-->
+<!--          [ngClass]="{-->
+<!--            'border-red-500': cardNumber.invalid && cardNumber.touched-->
+<!--          }"/>-->
+<!--      </div>-->
+
+      <!-- Solihtirov davolat noma raqami va sanasi -->
+      <div class="flex flex-col gap-2">
+        <label class="text-sm text-gray-600 dark:text-gray-300">
+          Solihtirov davolat noma raqami va sanasi
+        </label>
+        <p-select
+          name="taxPeriod"
+          size="small"
+          [options]="taxPeriods"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Tanlang"
+          [showClear]="true"
+          [(ngModel)]="formData.selectedTaxPeriod"
+          class="w-full">
+        </p-select>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <!-- Murojatchi telefon raqami -->
+        <div class="flex flex-col gap-2">
+          <label for="phoneNumber" class="text-sm text-gray-600 dark:text-gray-300">
+            Murojatchi telefon raqami
+          </label>
+          <input
+            id="phoneNumber"
+            name="phoneNumber"
+            type="tel"
+            pSize="small"
+            pInputText
+            [(ngModel)]="formData.phoneNumber"
+            placeholder="+998 97 777 777 77"
+            class="w-full"/>
+        </div>
+
+        <!-- Arizaga ilova -->
+        <div class="flex flex-col gap-2">
+          <label class="text-sm text-gray-600 dark:text-gray-300 ">Arizaga ilova</label>
+          <div class="relative">
+            <input
+              #fileUpload
+              type="file"
+              class="hidden"
+              (change)="onFileChange($event)"
+              accept=".pdf,.doc,.docx,.jpg,.png"
+            />
+            <div
+              class="w-full border border-[#CBD5E1] dark:border-[#475569] dark:bg-[var(--p-surface-950)] rounded-md cursor-pointer overflow-hidden"
+              (click)="fileUpload.click()"
+            >
+              <div class="flex items-center justify-between px-4">
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                  <div
+                    class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                    [ngClass]="selectedFile ? '' : 'bg-gray-100'"
+                  >
+                    <i
+                      [class]="
+                            selectedFile ? 'pi pi-check text-blue-600' : 'pi pi-file text-gray-400'
+                          "
+                    ></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p
+                      class="text-sm truncate"
+                      [ngClass]="selectedFile ? 'font-medium' : 'text-gray-400'"
+                    >
+                      {{ selectedFile ? selectedFile.name : 'Fayl tanlang...' }}
+                    </p>
+                    @if (selectedFile) {
+                      <p class="text-[10px] text-gray-500 mt-0">
+                        {{ formatFileSize(selectedFile.size) }}
+                      </p>
+                    }
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 ml-3">
+                  @if (selectedFile) {
+                    <button
+                      type="button"
+                      (click)="removeFile($event)"
+                      class="px-2 text-red-600 hover:bg-red-50 rounded-md"
+                      title="O'chirish"
+                    >
+                      <i class="pi pi-times"></i>
+                    </button>
+                  }
+                  <div class="px-2 py-[5px] text-blue-600  rounded-md">
+                    <i class="w-4 h-4 pi pi-upload"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="mt-2 text-xs text-gray-500">PDF, DOC, DOCX, JPG, PNG (Maksimal 10MB)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <!-- Bank nomi -->
+        <div class="flex flex-col gap-2">
+          <label for="bankName" class="text-sm text-gray-600 dark:text-gray-300">
+            Bank nomi
+          </label>
+          <input
+            id="bankName"
+            name="bankName"
+            type="text"
+            pInputText
+            pSize="small"
+            [(ngModel)]="formData.bankName"
+            placeholder="Асакабанк АТБ"
+            required
+            class="w-full"
+            #bankName="ngModel"
+            [ngClass]="{
+                'border-red-500': bankName.invalid && bankName.touched
+            }"
+          />
+        </div>
+
+        <!-- Bank hisobraqami -->
+        <div class="flex flex-col gap-2">
+          <label for="accountNumber" class="text-sm text-gray-600 dark:text-gray-300">
+            Bank hisobraqami
+          </label>
+          <input
+            id="accountNumber"
+            name="accountNumber"
+            type="text"
+            pInputText
+            pSize="small"
+            [(ngModel)]="formData.accountNumber"
+            placeholder="100120123212025000000"
+            required
+            class="w-full"
+            #accountNumber="ngModel"
+            [ngClass]="{
+                'border-red-500': accountNumber.invalid && accountNumber.touched
+            }"
+          />
+        </div>
+      </div>
+
+      <!-- Izoh -->
+      <div class="flex flex-col gap-2">
+        <label for="comment" class="text-sm text-gray-600 dark:text-gray-300">
+          Izoh
+        </label>
+        <textarea
+          id="comment"
+          name="comment"
+          type="text"
+          [(ngModel)]="formData.comment"
+          placeholder="Izoh kiriting..."
+          class="w-full"
+          rows="4"
+          pTextarea
+        ></textarea>
+      </div>
+
+      <!-- Submit button form ichida emas, balki footer da bo'ladi -->
+    </form>
+  </div>
+
+  <div class="flex justify-end gap-2 " >
+    <p-button
+      label="Bekor qilish"
+      icon="pi pi-times"
+      (onClick)="visible = false"
+      severity="secondary"
+      [text]="true">
+    </p-button>
+    <p-button
+      label="Yuborish"
+      icon="pi pi-check"
+      type="submit"
+      (onClick)="submitForm()"
+      severity="success"
+      [disabled]="!applicationForm?.valid">
+    </p-button>
+  </div>
+</p-dialog>
+

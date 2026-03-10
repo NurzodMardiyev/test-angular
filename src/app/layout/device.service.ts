@@ -1,7 +1,7 @@
 import {Injectable, signal} from '@angular/core';
 import {DeviceDetectorService} from 'ngx-device-detector';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class DeviceService {
   private readonly _isMobile = signal(false);
   private readonly _isDesktop = signal(false);
@@ -24,6 +24,10 @@ export class DeviceService {
 
   isDesktop(): boolean {
     return this.device.isDesktop();
+  }
+
+  isTablet(): boolean {
+    return this.device.isTablet();
   }
 
 }

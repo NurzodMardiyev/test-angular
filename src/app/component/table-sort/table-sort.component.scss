@@ -1,0 +1,15 @@
+.custom-sort-icons {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-left: 4px;
+  line-height: 0.5;
+}
+.pi {
+  font-size: 8px !important; /* Rasmdagidek kichikroq qilish uchun */
+  color: #999; /* Aktiv bo'lmagan holat */
+}
+.active {
+  color: #333; /* Aktiv holat (qora/to'q rang) */
+}

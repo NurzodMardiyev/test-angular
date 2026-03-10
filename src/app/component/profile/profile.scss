@@ -1,0 +1,36 @@
+.profile-card {
+  width: 350px;
+  margin-bottom: -50px;
+
+  .section-title {
+    padding: 1rem 1rem 0.5rem 1rem;
+    color: #888;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+
+  .menu-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 0.95rem;
+
+
+    &.active {
+      background: #f0f7ff;
+      border-radius: 6px;
+      margin: 0 0.5rem;
+    }
+
+    i {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    .text-blue-500 i {
+      color: #3b82f6;
+    }
+  }
+}
+

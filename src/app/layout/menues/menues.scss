@@ -1,0 +1,60 @@
+.icon {
+  font-size: 1.5rem;
+}
+
+  .menu-item {
+    position: relative;
+    border-radius: 8px;
+    transition: background 0.25s ease;
+
+    &:hover {
+      svg path { fill: var(--p-primary-color) !important; }
+      span { color: var(--p-primary-color) !important; }
+    }
+
+    &.activ-link-btn {
+      svg path {
+        fill: var(--p-primary-color) !important;
+      }
+      span {
+        color: var(--p-primary-color) !important;
+        font-weight: 600;
+      }
+    }
+  }
+
+
+  .menu-item::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 4px;
+    height: 24px;
+    border-radius: 999px;
+    background-color: var(--p-primary-color);
+    opacity: 0;
+
+    transition:
+      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease;
+  }
+
+  .menu-item.activ-link-btn {
+    background: color-mix(
+        in srgb,
+        var(--p-primary-color),
+        transparent 88%
+    );
+  }
+
+  .menu-item.activ-link-btn::before {
+    transform: translateY(-50%) scaleY(1);
+    opacity: 1;
+  }
+
+  .menu-item.activ-link-btn .pi {
+    color: var(--p-primary-color);
+    transition: color 0.2s ease;
+  }

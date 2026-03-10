@@ -1,0 +1,34 @@
+::ng-deep .no-padding-card .p-card-body {
+  padding: 10px 20px !important;
+}
+
+
+::ng-deep .right-side-popover {
+  margin-left: 65px;
+  bottom: 25px !important;
+
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    left: -0px !important;
+    bottom: 10px !important;
+    top: auto !important;
+    right: auto !important;
+    border-top: 10px solid transparent !important;
+    border-bottom: 10px solid transparent !important;
+    border-left: none !important;
+    transform: none !important;
+    display: block !important;
+  }
+
+  &::before {
+    border-right: 10px solid var(--popover-border-right-before) !important;
+    margin-left: -1px;
+  }
+
+  &::after {
+    border-right: 10px solid var(--popover-border-right-after) !important;
+  }
+}
+
+

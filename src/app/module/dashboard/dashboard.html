@@ -1,1 +1,218 @@
-<div>Dashboard</div>
+
+<div class="flex flex-col">
+  <!-- Statistika malumotlar -->
+  <div class="grid grid-cols-12 w-full gap-4 mt-0 " >
+    <p-card class="md:col-span-4 px-4 py-1">
+      <div class="flex gap-3 items-center">
+        <div class="p-3 rounded-full  title_icon w-12 h-12 flex justify-center items-center">
+          <i class="pi pi-folder-open !text-[18px]"></i>
+        </div>
+        <div>
+          <h2 class="font-semibold text-xl mb-[-5px]">Murojaatlar soni</h2>
+        </div>
+      </div>
+
+      <div class="flex items-end gap-2 mt-4">
+        <p class="md:text-[32px] font-[600] leading-8">105</p>
+        <span class="text-[#727C91]">Jami murojaat</span>
+      </div>
+
+      <div class="multi-progress">
+        @for (s of segments; track s.color) {
+          <div
+            class="segment"
+            [ngStyle]="{
+              width: s.value + '%',
+              backgroundColor: s.color,
+            }"
+          >
+            <span class="mt-4 block text-[14px]">{{ s.value }}%</span>
+          </div>
+        }
+      </div>
+      <div class="pie-progress grid grid-cols-12 md:mt-14">
+        @for (p of progress; track p.text) {
+          <div class="col-span-3 flex flex-col items-center ">
+            <div class="p-[11px] rounded-full" [style.background]="'linear-gradient(to right, ' + p.colorFrom + ', ' + p.colorTo + ')'">
+              <div class="dark:bg-[var(--p-surface-900)] bg-white rounded-full p-1.5">
+                <img [src]='p.icon' alt="price status" class="w-6">
+              </div>
+            </div>
+            <p class="text-[24px] font-bold leading-6 mt-2">{{p.value}}</p>
+            <span class="text-[#A2A4A8]">{{p.text}}</span>
+          </div>
+        }
+      </div>
+    </p-card>
+
+    <p-card class="col-span-5 px-4 py-1">
+      <div class="flex gap-3 items-center">
+        <div class="p-3 rounded-full  title_icon w-12 h-12 flex justify-center items-center">
+          <i class="pi pi-chart-bar !text-[18px] "></i>
+        </div>
+        <div>
+          <h2 class="font-semibold text-xl mb-[-5px]">Murojaatlar soni</h2>
+        </div>
+      </div>
+
+      <div class="flex items-end gap-2 mt-4">
+        <p class="md:text-[32px] font-[600] leading-8">105</p>
+        <span class="text-[#727C91]">Jami murojaat</span>
+      </div>
+      <div class="mt-2" >
+        <p-chart #chart class="h-[215px]" type="bar" [data]="basicData" [options]="basicOptions"/>
+      </div>
+    </p-card>
+
+    <p-card class="md:col-span-3 px-2 py-1 pb-0 flex flex-col ">
+      <div class="flex gap-2 items-center mb-6">
+        <div class="p-3 rounded-full  title_icon w-12 h-12 flex justify-center items-center">
+          <i class="pi pi-chart-bar !text-[18px] "></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-semibold">Pul mablag‘lari ma’lumoti</h2>
+        </div>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="grid grid-cols-12 items-center gap-2 ">
+          <div class="flex items-center gap-2 col-span-8" >
+            <div class="flex-shrink-0 w-[60px] h-[60px] flex justify-center items-center bg-[#FFF5D9] dark:bg-[var(--p-surface-700)] rounded-full">
+              <svg width="30" height="30" class="flex flex-2" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23.8488 31.4774H7.26525C6.37765 31.4765 5.52667 31.1235 4.89904 30.4958C4.27141 29.8682 3.91841 29.0172 3.91748 28.1296V18.2325C3.91841 17.3449 4.27141 16.494 4.89904 15.8663C5.52667 15.2387 6.37765 14.8857 7.26525 14.8848H23.8488C24.7364 14.8857 25.5874 15.2387 26.215 15.8663C26.8426 16.494 27.1956 17.3449 27.1965 18.2325V28.1296C27.1956 29.0172 26.8426 29.8682 26.215 30.4958C25.5874 31.1235 24.7364 31.4765 23.8488 31.4774ZM7.26525 16.9832C6.93403 16.9836 6.61648 17.1154 6.38227 17.3496C6.14807 17.5838 6.01632 17.9013 6.01595 18.2325V28.1296C6.01632 28.4609 6.14807 28.7784 6.38227 29.0126C6.61648 29.2468 6.93403 29.3786 7.26525 29.3789H23.8488C24.18 29.3786 24.4976 29.2468 24.7318 29.0126C24.966 28.7784 25.0977 28.4609 25.0981 28.1296V18.2325C25.0977 17.9013 24.966 17.5838 24.7318 17.3496C24.4976 17.1154 24.18 16.9836 23.8488 16.9832H7.26525Z" fill="#FFBB38"/>
+                <path d="M28.5509 25.8267H26.1475C25.8692 25.8267 25.6023 25.7162 25.4056 25.5194C25.2088 25.3226 25.0982 25.0558 25.0982 24.7775C25.0982 24.4992 25.2088 24.2323 25.4056 24.0356C25.6023 23.8388 25.8692 23.7283 26.1475 23.7283H28.5509C28.8819 23.7275 29.1991 23.5956 29.433 23.3614C29.6669 23.1273 29.7985 22.8099 29.7988 22.479V12.5819C29.7986 12.2508 29.6672 11.9332 29.4332 11.6989C29.1993 11.4646 28.882 11.3326 28.5509 11.3319H11.9674C11.6362 11.3322 11.3186 11.464 11.0844 11.6982C10.8502 11.9324 10.7185 12.2499 10.7181 12.5812V15.9331C10.7181 16.2114 10.6076 16.4783 10.4108 16.675C10.214 16.8718 9.94714 16.9824 9.66887 16.9824C9.39059 16.9824 9.12371 16.8718 8.92694 16.675C8.73017 16.4783 8.61963 16.2114 8.61963 15.9331V12.5819C8.62037 11.6941 8.9733 10.843 9.60094 10.2152C10.2286 9.58743 11.0797 9.23432 11.9674 9.2334H28.5509C29.4384 9.23469 30.2891 9.58796 30.9165 10.2157C31.5438 10.8434 31.8966 11.6944 31.8973 12.5819V22.479C31.8964 23.3663 31.5436 24.2171 30.9162 24.8447C30.2889 25.4723 29.4383 25.8254 28.5509 25.8267Z" fill="#FFBB38"/>
+                <path d="M26.1473 23.978H4.96672C4.68844 23.978 4.42156 23.8674 4.22479 23.6707C4.02802 23.4739 3.91748 23.207 3.91748 22.9287V19.4047C3.91748 19.1264 4.02802 18.8596 4.22479 18.6628C4.42156 18.466 4.68844 18.3555 4.96672 18.3555H26.1473C26.4256 18.3555 26.6925 18.466 26.8892 18.6628C27.086 18.8596 27.1965 19.1264 27.1965 19.4047V22.9287C27.1965 23.207 27.086 23.4739 26.8892 23.6707C26.6925 23.8674 26.4256 23.978 26.1473 23.978ZM6.01595 21.8795H25.0981V20.4539H6.01595V21.8795Z" fill="#FFBB38"/>
+              </svg>
+            </div>
+            <p class="flex w-full font-medium">Kechiktirib / bo‘lib - bo‘lib to‘lash</p>
+          </div>
+
+          <p class="text-nowrap flex justify-end col-span-4 text-[#FF4B4A]">100 000 000</p>
+        </div>
+
+
+        <div class="grid grid-cols-12 items-center gap-2 ">
+          <div class="flex items-center gap-2 col-span-8" >
+            <div class="flex-shrink-0 w-[60px] h-[60px] flex justify-center items-center bg-[#E7EDFF] dark:bg-[var(--p-surface-700)] rounded-full">
+              <svg width="30" height="30" class="flex flex-2" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6C22.1229 6 25.7624 8.07939 27.9234 11.25H24V14.25H33V5.25H30V8.99904C27.2643 5.35749 22.9086 3 18 3C9.71572 3 3 9.71572 3 18H6C6 11.3726 11.3726 6 18 6ZM30 18C30 24.6275 24.6275 30 18 30C13.8772 30 10.2376 27.9205 8.07664 24.75H12V21.75H3V30.75H6V27.0009C8.73571 30.6425 13.0915 33 18 33C26.2842 33 33 26.2842 33 18H30Z" fill="#396AFF"/>
+              </svg>
+            </div>
+            <p class="flex w-full font-medium">Qaytarilgan mablag‘lar</p>
+          </div>
+
+          <p class="text-nowrap flex justify-end col-span-4 text-[#396AFF]">50 000 000,0</p>
+        </div>
+
+
+        <div class="grid grid-cols-12 items-center gap-2 ">
+          <div class="flex items-center gap-2 col-span-8" >
+            <div class="flex-shrink-0 w-[60px] h-[60px] flex justify-center items-center bg-[#DCFAF8] dark:bg-[var(--p-surface-700)] rounded-full">
+              <svg width="30" height="30" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M33.0074 10.5H34.5074V25.5H33.0074V30C33.0074 30.8285 32.3358 31.5 31.5074 31.5H4.50732C3.6789 31.5 3.00732 30.8285 3.00732 30V6C3.00732 5.17156 3.6789 4.5 4.50732 4.5H31.5074C32.3358 4.5 33.0074 5.17156 33.0074 6V10.5ZM30.0074 25.5H21.0074C16.8653 25.5 13.5073 22.1421 13.5073 18C13.5073 13.8579 16.8653 10.5 21.0074 10.5H30.0074V7.5H6.00732V28.5H30.0074V25.5ZM31.5074 22.5V13.5H21.0074C18.522 13.5 16.5074 15.5147 16.5074 18C16.5074 20.4852 18.522 22.5 21.0074 22.5H31.5074ZM21.0074 16.5H25.5074V19.5H21.0074V16.5Z" fill="#16DBCC"/>
+              </svg>
+            </div>
+            <p class="flex w-full font-medium">Depozit qoldiq</p>
+          </div>
+
+          <p class="text-nowrap flex justify-end col-span-4 text-[#41D4A8]">70 000 000,0</p>
+        </div>
+
+
+      </div>
+    </p-card>
+  </div>
+
+
+  <!-- TABLE -->
+  <div class="grid grid-cols-12 mt-4 gap-4">
+    <p-card class=" md:col-span-12 px-6 py-1 pb-0 transition-all duration-300" [ngClass]="{
+      'fullscreen-card': isTableExpanded,
+      'md:col-span-12': !isTableExpanded
+    }">
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex gap-2 items-center">
+              <div class="p-3 rounded-full  title_icon w-12 h-12 flex justify-center items-center">
+                <i class="pi pi-chart-bar !text-[18px] "></i>
+              </div>
+              <div>
+                <h2 class="text-xl font-semibold text-[#1A1A1A]">Arizalar ro‘yhati</h2>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input
+                  type="text"
+                  pInputText
+                  placeholder="Qidiruv"
+                  pSize="small"
+                  class="!transition-all !duration-300"
+                  [ngClass]="{'w-[300px]': expanded, '!w-[110px]': !expanded}"
+                  (focus)="expanded = true"
+                  (blur)="expanded = false"
+                />
+              </p-iconfield>
+
+              <p-button>
+                <i class="pi pi-file-excel"></i>
+              </p-button>
+              <p-button (click)="toggleTableExpand()" outlined>
+                <i [class]="isTableExpanded ? 'pi pi-window-minimize' : 'pi pi-arrow-up-right-and-arrow-down-left-from-center'"></i>
+              </p-button>
+            </div>
+
+
+          </div>
+
+          <p-table
+            [value]="tableData"
+            [paginator]="true"
+            [rows]="15"
+            [totalRecords]="tableData.length"
+            [lazy]="false"
+            [rowsPerPageOptions]="[15, 25, 50]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{totalRecords} tadan {first}-{last} gacha"
+            [scrollable]="true"
+            [scrollHeight]="isTableExpanded ? 'calc(100vh - 220px)' : '300px'"
+            class="!border-none text-xs p-datatable-wrapper">
+
+            <ng-template pTemplate="header" class="">
+              <tr class="h-[50px] text-[#fff] table-style-v1">
+                <th>Ariza raqami</th>
+                <th>Ariza sanasi</th>
+                <th>Xizmat turi</th>
+                <th>Summa</th>
+                <th>Ariza holati</th>
+                <th>Javob xati</th>
+                <th>Sanasi</th>
+                <th>Ijrochi</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr class="h-[50px] !border-none  border-[#EFF1F6] hover:bg-[#F9FAFF]">
+                <td>{{ row.number }}</td>
+                <td>{{ row.date }}</td>
+                <td>{{ row.type }}</td>
+                <td class="text-[#1A73E8] underline cursor-pointer">{{ row.amount }}</td>
+                <td class="">
+                  <p-tag [severity]="row.statusType" styleClass="px-3 py-1 !text-xs rounded-full">{{row.status}}</p-tag>
+                </td>
+                <td>{{ row.response }}</td>
+                <td>{{ row.responseDate }}</td>
+                <td>{{ row.executor }}</td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="paginatorleft">
+              <div></div>
+            </ng-template>
+          </p-table>
+        </p-card>
+  </div>
+</div>
+
+
+

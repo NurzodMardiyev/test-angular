@@ -1,0 +1,50 @@
+
+:host ::ng-deep .video-full-dialog {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}
+
+:host ::ng-deep .video-full-dialog .p-dialog {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .video-full-dialog .p-dialog-content {
+  padding: 0 !important;
+  background: transparent !important;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Video o‘zi */
+.video-wrapper {
+  width: 100vw;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+}
+
+.video-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-none {
+  display: block;
+}
+

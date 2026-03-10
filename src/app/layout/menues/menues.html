@@ -1,0 +1,29 @@
+@if (deviceService.isDesktop()) {
+
+  <nav class="flex flex-col items-center gap-2 w-full mt-4 px-1">
+    @for (menu of menuItems; let i = $index; track menu.routerLink) {
+      <div
+        class="menu-item flex w-full justify-center relative hover:bg-[var(--p-primary-50)]
+       dark:hover:bg-[var(--p-surface-800)] transition-colors rounded
+       cursor-pointer"
+        [routerLink]="menu.routerLink"
+        routerLinkActive="activ-link-btn"
+        [routerLinkActiveOptions]="{ exact: false }"
+        pRipple
+        [pTooltip]="menu.tooltip | translate"
+        tooltipPosition="right"
+      >
+        <div class="flex flex-col items-center py-1">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path [attr.d]="menu.icon" class="!fill-[#253347] dark:!fill-white transition-colors duration-200"/>
+          </svg>
+          <span class="text-[10px] !fill-[#253347] dark:!fill-white transition-colors duration-200">{{menu.title | translate}}</span>
+        </div>
+      </div>
+    }
+  </nav>
+
+}
+@else if (deviceService.isMobile()) {
+
+}

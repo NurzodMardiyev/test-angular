@@ -1,0 +1,251 @@
+<div class="w-full">
+  <!-- Grid/List Toggle -->
+  <div class="flex justify-end mb-4">
+    <p-select-button
+      [(ngModel)]="layout"
+      [options]="options"
+      [allowEmpty]="false"
+      styleClass="custom-toggle">
+      <ng-template #item let-item>
+        <i class="pi" [ngClass]="{ 'pi-bars': item === 'list', 'pi-table': item === 'grid' }"></i>
+      </ng-template>
+    </p-select-button>
+  </div>
+
+  <!-- GRID Layout -->
+  @if (layout === 'grid') {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (s of services; track s.title) {
+        <p-card class="">
+
+          <!-- Card Header -->
+          <div class="flex items-center gap-4 px-6 pb-4 border-b border-[#ECEEF0]">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path [attr.d]="s.icon" class="!fill-[var(--p-primary-color)]" />
+              </svg>
+            <h3 class="text-lg font-bold text-[var(--p-text-color)] uppercase leading-tight">
+              {{ s.title }}
+            </h3>
+          </div>
+
+          <!-- Card Description -->
+          <div class="px-6 pt-3 pb-2 min-h-[70px]">
+            <p
+              class="text-sm text-[var(--p-text-muted-color)] leading-relaxed transition-all duration-300 cursor-pointer select-none"
+              [ngClass]="{ 'line-clamp-2': !s.expanded, 'line-clamp-none': s.expanded }"
+              (click)="toggleDescription(s)"
+            >
+              {{ s.desc }}
+            </p>
+          </div>
+
+          <!-- Card Content -->
+          <div class="flex-1 px-6 pb-2">
+            <div class="grid grid-cols-2 items-center gap-4">
+              <!-- Service Details -->
+              <div class="col-span-1 flex flex-col gap-3">
+                <div class="flex items-start gap-3">
+                  <i class="pi pi-credit-card text-[var(--p-primary-color)]" style="font-size: 1.4em"></i>
+                  <div class="text-sm">
+                    <span class="text-[var(--p-text-muted-color)]">Xizmat narxi</span>
+                    <br>
+                    <span class="font-semibold text-[var(--p-text-color)]">
+                      {{ s.type === 'free' ? 'Bepul' : 'Pullik' }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                  <i class="pi pi-calendar text-[var(--p-primary-color)]" style="font-size: 1.4em"></i>
+                  <div class="text-sm">
+                    <span class="text-[var(--p-text-muted-color)]">Xizmat muddati</span>
+                    <br>
+                    <span class="font-semibold text-[var(--p-text-color)]">Avtomat</span>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                  <i class="pi pi-user text-[var(--p-primary-color)]" style="font-size: 1.4em"></i>
+                  <div class="text-sm">
+                    <span class="text-[var(--p-text-muted-color)]">Xizmatdan foydalanuvchi</span>
+                    <br>
+                    <span class="font-semibold text-[var(--p-text-color)]">Jismoniy va yuridik shaxslar</span>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                  <i class="pi pi-building text-[var(--p-primary-color)]" style="font-size: 1.4em"></i>
+                  <div class="text-sm">
+                    <span class="text-[var(--p-text-muted-color)]">Tashkilot</span>
+                    <br>
+                    <span class="font-semibold text-[var(--p-text-color)]">Bojxona qo'mitasi</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Video Thumbnail -->
+              <div class="w-full">
+                <div
+                  class="relative w-full aspect-video bg-[var(--p-surface-100)] rounded-lg overflow-hidden cursor-pointer group"
+                  (click)="openVideoDialog(s, $event)">
+                  <img
+                    [src]="'https://img.youtube.com/vi/' + extractVideoId(s.video) + '/mqdefault.jpg'"
+                    alt="Video thumbnail"
+                    class="w-full h-full object-cover transition-transform group-hover:scale-105"/>
+                  <div
+                    class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover:bg-opacity-40 transition-all">
+                    <div
+                      class="w-10 h-10 rounded-full bg-[var(--p-primary-color)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <i class="pi pi-play text-white text-2xl ml-1"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Footer -->
+          <div class="px-4 pb-2 pt-4">
+            <p-button
+              (onClick)="goToSplit(s.button)"
+              label="Xizmatdan foydalanish"
+              styleClass="w-full"
+              [outlined]="false">
+            </p-button>
+          </div>
+        </p-card>
+      }
+    </div>
+  }
+
+  <!-- LIST Layout -->
+  @if (layout === 'list') {
+    <div class="flex flex-col gap-4">
+      @for (s of services; track s.title) {
+        <p-card>
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Title Section -->
+            <div class="col-span-1 flex flex-col">
+              <div class="flex items-center mb-3 gap-4">
+                <div class="w-12 h-12 flex-shrink-0 p-2 bg-[var(--p-primary-color)] bg-opacity-10 rounded-lg">
+                  <img [src]="s.icon" [alt]="s.title" class="w-full h-full object-contain"/>
+                </div>
+                <h3 class="text-lg font-bold text-[var(--p-text-color)] uppercase dark:text-black leading-tight">
+                  {{ s.title }}
+                </h3>
+              </div>
+
+
+              <!-- Content Section -->
+              <div class="flex-1  pb-4">
+                <div class=" items-center gap-4">
+                  <!-- Service Details -->
+                  <div class="flex gap-5">
+                    <div>
+                      <div class="flex items-start gap-3">
+                        <img src="assets/icons/xizmat_narxi.svg" class="w-6 h-6 flex-shrink-0" alt="narxi"/>
+                        <div class="text-sm">
+                          <span class="text-[var(--p-text-muted-color)]">Xizmat narxi</span>
+                          <br>
+                          <span class="font-semibold text-[var(--p-text-color)]">
+                      {{ s.type === 'free' ? 'Bepul' : 'Pullik' }}
+                    </span>
+                        </div>
+                      </div>
+
+                      <div class="flex items-start gap-3">
+                        <img src="assets/icons/xizmat_muddati.svg" class="w-6 h-6 flex-shrink-0" alt="muddati"/>
+                        <div class="text-sm">
+                          <span class="text-[var(--p-text-muted-color)]">Xizmat muddati</span>
+                          <br>
+                          <span class="font-semibold text-[var(--p-text-color)]">Avtomat</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex items-start gap-3">
+                        <img src="assets/icons/xizmatdan_foydalanuvchi.svg" class="w-6 h-6 flex-shrink-0"
+                             alt="foydalanuvchi"/>
+                        <div class="text-sm">
+                          <span class="text-[var(--p-text-muted-color)]">Xizmatdan foydalanuvchi</span>
+                          <br>
+                          <span class="font-semibold text-[var(--p-text-color)]">Jismoniy va yuridik shaxslar</span>
+                        </div>
+                      </div>
+
+                      <div class="flex items-start gap-3">
+                        <img src="assets/icons/tashkilot.svg" class="w-6 h-6 flex-shrink-0" alt="tashkilot"/>
+                        <div class="text-sm">
+                          <span class="text-[var(--p-text-muted-color)]">Tashkilot</span>
+                          <br>
+                          <span class="font-semibold text-[var(--p-text-color)]">Bojxona qo'mitasi</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p-button
+                (onClick)="goToSplit(s.button)"
+                label="Foydalanish"
+                styleClass="w-full "
+                [outlined]="false">
+              </p-button>
+            </div>
+
+            <!-- Video and Button Section -->
+            <div class="col-span-1 flex justify-end">
+              <div
+                class="relative  aspect-video bg-[var(--p-surface-100)] rounded-lg overflow-hidden cursor-pointer group"
+                (click)="openVideoDialog(s, $event)">
+                <img
+                  [src]="'https://img.youtube.com/vi/' + extractVideoId(s.video) + '/mqdefault.jpg'"
+                  alt="Video thumbnail"
+                  class="w-full h-full object-cover transition-transform group-hover:scale-105"/>
+                <div
+                  class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover:bg-opacity-40 transition-all">
+                  <div
+                    class="w-12 h-12 rounded-full bg-[var(--p-primary-color)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="pi pi-play text-white text-xl ml-0.5"></i>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+        </p-card>
+      }
+    </div>
+  }
+
+  <!-- Video Dialog -->
+  <p-dialog
+    [(visible)]="videoDialogVisible"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    appendTo="body"
+    [blockScroll]="true"
+    [closable]="true"
+    [dismissableMask]="true"
+    [showHeader]="false"
+    [style]="{ width: '60vw' }"
+    [contentStyle]="{ padding: '0', background: 'transparent' }"
+    [maskStyle]="{ backgroundColor: 'rgba(0,0,0,0.3)' }"
+    styleClass="video-only-dialog"
+  >
+    @if (selectedVideoUrl) {
+      <div class="w-full aspect-video bg-black">
+        <iframe
+          [src]="selectedVideoUrl"
+          class="w-full h-full"
+          frameborder="0"
+          allowfullscreen
+          allow="autoplay; encrypted-media">
+        </iframe>
+      </div>
+    }
+  </p-dialog>
+</div>

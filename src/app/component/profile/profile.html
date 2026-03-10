@@ -1,0 +1,48 @@
+<div class="profile-card shadow-2">
+  <div class="header flex align-items-center p-3">
+    <p-avatar
+      image="/logo.png"
+      shape="circle"
+      size="large"
+      class="mr-3">
+    </p-avatar>
+    <div class="user-info">
+      <div class="name font-bold">{{user.name}} <i class="pi pi-check-circle text-green-500 text-xs"></i></div>
+      <div class="email text-sm text-500">{{user.email}}</div>
+    </div>
+  </div>
+
+  <p-divider class="m-0"></p-divider>
+
+  <div class="">
+    <div class="section-title">Exp</div>
+    <div class="menu-item hover:bg-[#f0f7ff] dark:hover:bg-[var(--p-surface-800)] flex align-items-center justify-content-between">
+      <div class="flex align-items-center">
+        <i class="pi pi-wallet mr-3"></i>
+        <span>{{user.exp}}</span>
+      </div>
+    </div>
+
+    <div class="section-title">Verification</div>
+    <div class="menu-item hover:bg-[#f0f7ff] dark:hover:bg-[var(--p-surface-800)] flex align-items-center justify-content-between">
+      <div class="flex align-items-center">
+        <i class="pi pi-verified mr-3"></i>
+        <span>KYC and KYB statuses</span>
+      </div>
+    </div>
+
+    <div class="section-title">Settings</div>
+    <div class="menu-item hover:bg-[#f0f7ff] dark:hover:bg-[var(--p-surface-800)] flex align-items-center justify-content-between">
+      <div class="flex align-items-center">
+        <i class="pi pi-briefcase mr-3"></i>
+        <span>Personal details</span>
+      </div>
+    </div>
+  </div>
+
+  <p-divider class="m-0"></p-divider>
+
+  <div class="p-3">
+    <span class="text-red-500 cursor-pointer font-medium hover:underline" (click)="onSignOut()">Sign out</span>
+  </div>
+</div>

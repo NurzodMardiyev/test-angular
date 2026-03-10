@@ -1,0 +1,525 @@
+<!-- createreport.html -->
+<p-card class="min-h-screen" [style]="{'background-color': 'color-mix(in srgb, var(--p-primary-color), transparent 94%)'}">
+  <div class="mx-auto">
+
+    <!-- Header -->
+    <div class="p-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 text-[var(--p-primary-color)] font-bold"
+        >
+          <i class="pi pi-arrow-left text-[var(--p-primary-color)]"></i>
+          Ortga qaytish
+        </button>
+      </div>
+
+      <div>
+        <p class="">"TOSHKENT METALLURGIYA ZAVODI" MCHJ va Bojxona qoʻmitasi oʻrtasida tuzilgan solishtiruv dalolatnomasi</p>
+        <h1 class="text-xl font-bold flex-1 text-center uppercase text-[var(--p-primary-color)]">
+          SOLISHTIRUV DALOLATNOMA
+        </h1>
+      </div>
+
+      <div class="px-10"></div>
+    </div>
+
+    <!-- Filters -->
+    <p-card class="">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-2">
+          <form [formGroup]="reviseForm">
+            <div class="flex gap-2 items-center">
+              <p-date-picker
+                [showIcon]="true"
+                [showOnFocus]="false"
+                [showButtonBar]="true"
+                inputId="inputDateStart"
+                dateFormat="yy-mm-dd"
+                size="small"
+                placeholder="yyyy-mm-dd"
+                formControlName="fromDate"
+                (onSelect)="onFromDateChange($event)"
+                [class.p-invalid]="reviseForm.get('fromDate')?.invalid && reviseForm.get('fromDate')?.touched"
+              ></p-date-picker>
+
+              <span>-</span>
+
+              <p-date-picker
+                [showIcon]="true"
+                [showOnFocus]="false"
+                [showButtonBar]="true"
+                inputId="inputDateEnd"
+                dateFormat="yy-mm-dd"
+                size="small"
+                placeholder="yyyy-mm-dd"
+                formControlName="toDate"
+                [minDate]="minToDate"
+                [class.p-invalid]="reviseForm.get('toDate')?.invalid && reviseForm.get('toDate')?.touched"
+              ></p-date-picker>
+            </div>
+          </form>
+          <p-button outlined (click)="refreshData()">
+            <i class="pi pi-refresh"></i>
+          </p-button>
+          <div class="flex">
+            <p-button
+              size="small"
+              (click)="showConfirmationDialog()"
+              [disabled]="reviseForm.get('toDate')?.invalid || reviseForm.get('fromDate')?.invalid"
+            >
+              <i class="pi pi-save"></i>
+              <span class="ml-2">Tasdiqlash</span>
+            </p-button>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <p-button outlined size="small" (click)="onExportExcel()">
+            <i class="pi pi-file-excel"></i>
+            Excel
+          </p-button>
+          <p-button outlined size="small" (click)="onExportPdf()">
+            <i class="pi pi-file-pdf"></i>
+            PDF
+          </p-button>
+        </div>
+      </div>
+
+      <!-- AG Grid Table -->
+      <div class="ag-theme-alpine" style="width: 100%">
+        <p-table
+          #dt
+          [value]="payments"
+          size="small"
+          [paginator]="true"
+          [rows]="15"
+          [totalRecords]="totalRecords"
+          [loading]="loading"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{totalPages} ta dan {currentPage}-sahifa, jami {totalRecords} ta dan {first}-{last} gacha"
+          [rowsPerPageOptions]="[15, 25, 50, 100]"
+          [filterDelay]="500"
+          [scrollable]="true"
+          scrollHeight="700px"
+          class="p-datatable-sm p-datatable-gridlines"
+          responsiveLayout="scroll">
+
+          <!-- Header Template -->
+          <ng-template pTemplate="header" class="">
+            <tr class="table-style-v1 text-sm">
+              <th rowspan="2" class="text-center">T/r</th>
+              <th rowspan="2" pSortableColumn="sana">
+                Сана
+                <p-sortIcon field="sana"></p-sortIcon>
+              </th>
+              <th rowspan="2" pSortableColumn="hujjatRaqami">
+                Ҳужжат рақами
+                <p-sortIcon field="hujjatRaqami"></p-sortIcon>
+              </th>
+              <th rowspan="2" pSortableColumn="hujjatTuri">
+                Ҳужжат тури
+                <p-sortIcon field="hujjatTuri"></p-sortIcon>
+              </th>
+              <th rowspan="2" pSortableColumn="byudRaqami">
+                БЮД рақами
+                <p-sortIcon field="byudRaqami"></p-sortIcon>
+              </th>
+              <th colspan="2">"TOSHKENT METALLURGIYA ZAVODI" MCHJ</th>
+              <th colspan="2">Божхона кумитаси</th>
+            </tr>
+            <tr class="table-style-v1-row2 text-sm">
+              <th pSortableColumn="tmzDebet" class="">
+                Дебет
+                <p-sortIcon field="tmzDebet"/>
+              </th>
+              <th pSortableColumn="tmzKredit" class="">
+                Кредит
+                <p-sortIcon field="tmzKredit"/>
+              </th>
+              <th pSortableColumn="bojxonaDebet" class="">
+                Дебет
+                <p-sortIcon field="bojxonaDebet"/>
+              </th>
+              <th pSortableColumn="bojxonaKredit" class="">
+                Кредит
+                <p-sortIcon field="bojxonaKredit"/>
+              </th>
+            </tr>
+          </ng-template>
+
+          <!-- Body Template -->
+          <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
+            @if (rowIndex === dt?.first) {
+              <tr class="saldo-row text-md font-medium">
+                <td colspan="5" class="!text-center">
+                  Сальдо 01.01.2025 йил ҳолатига
+                </td>
+                <td>230698746,52</td>
+                <td>0</td>
+                <td>0</td>
+                <td>230698746,52</td>
+              </tr>
+            }
+            <tr class="text-sm">
+              <td class="!text-center">{{ rowIndex + 1 }}</td>
+              <td class="!text-center !p-3">{{ payment.sana }}</td>
+              <td class="!text-center !p-3">{{ payment.hujjatRaqami }}</td>
+              <td class="!text-center !p-3">{{ payment.hujjatTuri }}</td>
+              <td class="!text-center !p-3">{{ payment.byudRaqami || '---' }}</td>
+              <td class="!text-center !p-3">{{ formatNumber(payment.tmzDebet) }}</td>
+              <td class="!text-center !p-3">{{ formatNumber(payment.tmzKredit) }}</td>
+              <td class="!text-center !p-3">{{ formatNumber(payment.bojxonaDebet) }}</td>
+              <td class="!text-center !p-3">{{ formatNumber(payment.bojxonaKredit) }}</td>
+            </tr>
+            @if (
+              payments.length > 0 &&
+              rowIndex === payments.length - 1 && payments.length > 0
+              ) {
+              <tr class="">
+                <td colspan="5" class="!text-center font-medium">Жами</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalTmzDebet) }}</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalTmzKredit) }}</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalBojxonaDebet) }}</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalBojxonaKredit) }}</td>
+              </tr>
+              <tr class="bg-gray-100">
+                <td colspan="5" class="!text-center font-medium">Saldo 15.12.2025 yil holatiga</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalTmzDebet) }}</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalTmzKredit) }}</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalBojxonaDebet) }}</td>
+                <td class="!text-center font-medium">{{ formatNumber(totalBojxonaKredit) }}</td>
+              </tr>
+              <tr class="">
+                <td colspan="9" class="!text-center font-medium !p-4  !bg-gray-100 dark:!bg-[var(--p-surface-950)]">29.06.2025-yil holatiga "TOSHKENT METALLURGIYA ZAVODI" MCHJ foydasiga 1 905 739 909,55 (bir milliard toʻqqiz yuz besh million yetti yuz oʻttiz toʻqqiz ming toʻqqiz yuz toʻqqiz million soʻm ellik besh tiyin) qoldiq pul mablagʻlari mavjud</td>
+              </tr>
+            }
+          </ng-template>
+
+          <!-- Loading Template -->
+          <ng-template pTemplate="loadingbody">
+            <tr>
+              <td colspan="9">
+                <div class="flex items-center justify-center p-4">
+                  <p-skeleton width="100%" height="3rem"></p-skeleton>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <!-- Empty Message Template -->
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="9" class="text-center w-full py-10">
+                <div class="w-full flex justify-center">
+                  <div class="text-center">
+                    <img src="./assets/images/empty.png" alt="Malumot topilmadi">
+                    <p class="text-xl mb-10">Ma'lumotlar shakllanmagan!</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template>
+            <div>29.06.2025-yil holatiga "TOSHKENT METALLURGIYA ZAVODI" MCHJ foydasiga 1 905 739 909,55 (bir milliard toʻqqiz yuz besh million yetti yuz oʻttiz toʻqqiz ming toʻqqiz yuz toʻqqiz million soʻm ellik besh tiyin) qoldiq pul mablagʻlari mavjud</div>
+          </ng-template>
+
+          <!-- Paginator Template -->
+          <ng-template pTemplate="paginatorleft">
+            <div class="text-sm text-gray-700">Jami: {{ totalRecords }} ta</div>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-card>
+  </div>
+</p-card>
+
+<!-- Confirmation Dialog -->
+<p-dialog
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [draggable]="true"
+  [resizable]="false"
+  appendTo="body"
+  [blockScroll]="true"
+  [maximizable]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [showHeader]="true"
+  [style]="{ width: '80vw', height: '80vh' }"
+  [contentStyle]="{ padding: '0', background: 'transparent' }"
+  [maskStyle]="{ backgroundColor: 'rgba(0,0,0,0.3)' }"
+  class="report-dialog"
+>
+  <ng-template #header class="!pb-0">
+    <div class="bg-white dark:bg-gray-800">
+      <div class="">
+        <div class="flex gap-3">
+          <div>
+            <p class="text-xs mb-1">
+              Моззонавий кредиторлар СТИРи/ЭССИНи:
+            </p>
+            <p class="text-xs mb-1">
+              Моззонавий кредиторнинг номи:
+            </p>
+            <p class="text-xs mb-1">
+              Дави:
+            </p>
+            <p class="text-xs mb-3">
+              Тўл рақами:
+            </p>
+          </div>
+          <div class="text-[var(--p-primary-color)]">
+            <p class="text-xs mb-1">
+              304378612
+            </p>
+            <p class="text-xs mb-1">
+              "TOSHKENT METALLURGIYA ZAVODI" MCHJ
+            </p>
+            <p class="text-xs mb-1">
+              01.01.2025-25.06.2025
+            </p>
+            <p class="text-xs mb-3">
+              0.99996E+11
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="h-full flex flex-col">
+    <h2 class="text-lg text-center font-bold">
+      <span class="text-[var(--p-primary-color)]">"TOSHKENT METALLURGIYA ZAVODI" MCHJ</span> ва Божхона қўмитаси бирикса тўлилган
+      <br>
+      СОЛИШТИРУБ ДОЛАЛАТНОМАСИ
+    </h2>
+    <p-table
+      #dt
+      [value]="payments"
+      size="small"
+      [rows]="15"
+      [totalRecords]="totalRecords"
+      [loading]="loading"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{totalPages} ta dan {currentPage}-sahifa, jami {totalRecords} ta dan {first}-{last} gacha"
+      [rowsPerPageOptions]="[15, 25, 50, 100]"
+      [filterDelay]="500"
+      [scrollable]="true"
+      scrollHeight="340px"
+      class="p-datatable-sm p-datatable-gridlines px-4 bg-gray-100 py-3"
+      responsiveLayout="scroll">
+
+      <!-- Header Template -->
+      <ng-template pTemplate="header" class="">
+        <tr class="table-style-v1_dialog text-sm">
+          <th rowspan="2" class="text-center text-[12px]">T/r</th>
+          <th rowspan="2" pSortableColumn="sana" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden h-3 text-center text-[12px]">
+            Сана
+            <p-sortIcon field="sana"></p-sortIcon>
+          </th>
+          <th rowspan="2" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]" pSortableColumn="hujjatRaqami">
+            Ҳужжат рақами
+            <p-sortIcon field="hujjatRaqami"></p-sortIcon>
+          </th>
+          <th rowspan="2" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]" pSortableColumn="hujjatTuri">
+            Ҳужжат тури
+            <p-sortIcon field="hujjatTuri"></p-sortIcon>
+          </th>
+          <th rowspan="2" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]" pSortableColumn="byudRaqami">
+            БЮД рақами
+            <p-sortIcon field="byudRaqami"></p-sortIcon>
+          </th>
+          <th colspan="2" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">"TOSHKENT METALLURGIYA ZAVODI" MCHJ</th>
+          <th colspan="2" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">Божхона кумитаси</th>
+        </tr>
+        <tr class="table-style-v1_dialog text-sm">
+          <th pSortableColumn="tmzDebet" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Дебет
+            <p-sortIcon field="tmzDebet"/>
+          </th>
+          <th pSortableColumn="tmzKredit" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Кредит
+            <p-sortIcon field="tmzKredit"/>
+          </th>
+          <th pSortableColumn="bojxonaDebet" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Дебет
+            <p-sortIcon field="bojxonaDebet"/>
+          </th>
+          <th pSortableColumn="bojxonaKredit" class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Кредит
+            <p-sortIcon field="bojxonaKredit"/>
+          </th>
+        </tr>
+      </ng-template>
+
+      <!-- Body Template -->
+      <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
+        @if (rowIndex === dt?.first) {
+          <tr class="saldo-row text-md font-small !py-0">
+            <td colspan="5" class="!text-center !py-0 text-[12px]">
+              Сальдо 01.01.2025 йил ҳолатига
+            </td>
+            <td class="!py-0 text-[12px]">230698746,52</td>
+            <td class="!py-0 text-[12px]">0</td>
+            <td class="!py-0 text-[12px]">0</td>
+            <td class="!py-0 text-[12px]">230698746,52</td>
+          </tr>
+        }
+        <tr class="text-sm">
+          <td class="!text-center !py-0 text-[12px]">{{ rowIndex + 1 }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ payment.sana }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ payment.hujjatRaqami }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ payment.hujjatTuri }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ payment.byudRaqami || '---' }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ formatNumber(payment.tmzDebet) }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ formatNumber(payment.tmzKredit) }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ formatNumber(payment.bojxonaDebet) }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ formatNumber(payment.bojxonaKredit) }}</td>
+        </tr>
+      </ng-template>
+
+      <!-- Loading Template -->
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="9">
+            <div class="flex items-center justify-center p-4">
+              <p-skeleton width="100%" height="3rem"></p-skeleton>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Empty Message Template -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" class="text-center w-full py-10">
+            <div class="w-full flex justify-center">
+              <div class="text-center">
+                <img src="./assets/images/empty.png" alt="Malumot topilmadi">
+                <p class="text-xl mb-10">Ma'lumotlar shakllanmagan!</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- Dialog Footer -->
+  <ng-template #footer let-dialog>
+    <form [formGroup]="reviseForm" (ngSubmit)="onSendReviseToAccept()" class="flex w-full justify-between items-center pt-3">
+        <!-- Signatures -->
+          <div class="flex  gap-4 items-end w-1/3">
+            <!-- Select -->
+            <div class="">
+              <p class="font-semibold mb-2">
+                {{ selectedRole() === 'BUXGALTER'
+                ? 'DIREKTOR'
+                : 'BUXGALTER' }}:
+              </p>
+              @if (isLocked()) {
+                <p class="font-semibold">{{ selectedRole() === 'BUXGALTER'
+                  ? 'BUXGALTER'
+                  : 'DIREKTOR' }}:</p>
+              } @else {
+                <p-select
+                  [options]="[
+                  { name: 'Direktor', code: 'DIRECTOR' },
+                  { name: 'Buxgalter', code: 'BUGALTER' }
+                ]"
+                  optionLabel="name"
+                  size="small"
+                  class="h-[35px]"
+                  placeholder="Tanlang"
+                  formControlName="confPerType"
+                  optionValue="code"
+                  (onChange)="onRoleChange($event.value)"
+                  [ngClass]="{'ng-dirty ng-invalid': reviseForm.controls['confPerType'].invalid && reviseFormSubmit}"
+                ></p-select>
+              }
+              @if (reviseForm.get('confPerType')?.hasError('apiError')){
+                <small class="pl-2 py-0 my-0 p-error text-red-900">
+                  {{ reviseForm.get('confPerType')?.getError('apiError') }}
+                </small>
+              }
+            </div>
+
+            <!-- Input -->
+            <div class="">
+              <p class="mb-2 font-semibold text-gray-600">
+                Abdullayev
+              </p>
+              <div class="flex items-center gap-3">
+                @if (isLocked()) {
+                  <p class=" font-semibold text-gray-600">
+                    {{ name() }}
+                  </p>
+                } @else {
+                  <div class="relative flex-1">
+                    <input
+                      pInputText
+                      formControlName="confPer"
+                      maxlength="14"
+                      inputmode="numeric"
+                      placeholder="Қидирув..."
+                      class="h-[35px] w-full"
+                      [ngClass]="{'ng-dirty ng-invalid': reviseForm.controls['confPer'].invalid && reviseFormSubmit}"
+                    />
+                  </div>
+
+                  <p-button
+                    icon="pi pi-search"
+                    [loading]="tinLoading"
+                    (click)="searchTin()"
+                    [disabled]="isCheckDisabled() || tinLoading"
+                    class="h-[35px]"
+                    size="small"
+                    severity="secondary"
+                    [outlined]="true">
+                  </p-button>
+                }
+                @if (reviseForm.get('confPer')?.hasError('apiError')){
+                  <small class="pl-2 py-0 my-0 p-error text-red-900">
+                    {{ reviseForm.get('confPer')?.getError('apiError') }}
+                  </small>
+                }
+              </div>
+            </div>
+
+            <div class="flex items-end h-[35px]">
+              @if (isLocked()) {
+                <p-button
+                  outlined
+                  severity="primary"
+                  size="small"
+                  (click)="unlockInput()"
+                  label="Edit">
+                </p-button>
+              }
+            </div>
+          </div>
+
+          <!-- Qr -->
+          <div class=" text-[14px] text-center flex flex-col  items-center gap-2">
+            <div class="border w-12 h-12 flex items-center justify-center">
+
+            </div>
+            <div>
+              <p>Sana: 12.01.2026</p>
+              <p>Holati: Tasdiqlanmagan</p>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="w-1/3 gap-4 flex justify-end">
+              <p-button size="small" label="Xodimga qaytarish" severity="secondary" outlined icon="pi pi-undo"></p-button>
+              <p-button
+                size="small"
+                label="Tasdiqlash va jo'natish"
+                icon="pi pi-send"
+                type="submit"
+              ></p-button>
+            </div>
+    </form>
+  </ng-template>
+</p-dialog>

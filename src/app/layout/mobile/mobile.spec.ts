@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {Mobile} from './mobile';
+import { Mobile } from './mobile';
 
 describe('Mobile', () => {
   let component: Mobile;
@@ -14,7 +14,7 @@ describe('Mobile', () => {
 
     fixture = TestBed.createComponent(Mobile);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it('should create', () => {

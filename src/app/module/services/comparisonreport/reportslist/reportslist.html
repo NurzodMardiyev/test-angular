@@ -1,0 +1,445 @@
+<p-card class="min-h-screen"
+        [style]="{'background-color': 'color-mix(in srgb, var(--p-primary-color), transparent 94%)'}">
+  <div class="mx-auto">
+    <!-- Header -->
+    <div class="p-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 text-[#3B82F6] hover:text-blue-700 font-bold"
+        >
+          <i class="pi pi-arrow-left"></i>
+          Ortga qaytish
+        </button>
+      </div>
+
+      <h1 class="text-xl font-bold flex-1 text-center uppercase">
+        SOLISHTIRUV DALOLATNOMA
+      </h1>
+      <p-button (click)="createNew()">
+        <div class="px-10">
+          Dalolatnoma tuzish
+        </div>
+      </p-button>
+    </div>
+
+    <!-- Filters -->
+    <p-card>
+      <div class="flex items-center gap-3 flex-wrap mb-4">
+        <div class="border rounded-full flex items-center flex-wrap">
+          <button
+            class="px-10 py-2 border-r rounded-l-full transition-colors"
+            [class.bg-gray-200]="currentFilter === 'all'"
+          >
+            <span class="text-gray-700">Jami</span>
+          </button>
+
+          <button
+            class="px-10 py-2 border-r transition-colors"
+            [class.bg-blue-100]="currentFilter === 'yangi'"
+          >
+            <span class="text-blue-700">Yangi</span>
+            <span class="text-blue-700 ml-2"></span>
+          </button>
+
+          <button
+            class="px-10 py-2 border-r transition-colors"
+            [class.bg-yellow-100]="currentFilter === 'jarayonda'"
+          >
+            <span class="text-yellow-700">Jarayonda</span>
+            <span class="text-yellow-700 ml-2"></span>
+          </button>
+
+          <button
+            class="px-10 py-2 border-r transition-colors"
+            [class.bg-green-100]="currentFilter === 'qabul'"
+          >
+            <span class="text-green-700">Qabul qilingan</span>
+            <span class="text-green-700 ml-2"></span>
+          </button>
+
+          <button
+            class="px-10 py-2 rounded-r-full transition-colors"
+            [class.bg-red-100]="currentFilter === 'rad'"
+          >
+            <span class="text-red-700">Rad etilgan</span>
+            <span class="text-red-700 ml-2"></span>
+          </button>
+        </div>
+
+        <div class="ml-auto flex gap-2">
+          <p-button size="small" class="pr-2"
+                    styleClass="shadow shadow-blue-500/50" icon="pi pi-file-excel" label="Excel" [outlined]="true"
+                    (click)="openFileExcel()"/>
+          <p-button size="small" class="pr-2" styleClass="shadow shadow-blue-500/50" icon="pi pi-filter-slash"
+                    label="Филтр"
+                    [outlined]="true" (click)="clear(dtpayment)"/>
+        </div>
+      </div>
+
+      <!-- PrimeNG Table -->
+      <div class="relative">
+        <p-table
+          #dtpayment
+          [value]="payments"
+          [lazy]="true"
+          dataKey="id"
+          [paginator]="true"
+          [rows]="rows"
+          [totalRecords]="totalRecords"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{totalPages} ta dan {currentPage}-sahifa, jami {totalRecords} ta dan {first}-{last} gacha"
+          [rowsPerPageOptions]="[15, 25, 50, 100]"
+          [globalFilterFields]="['number', 'fromDate', 'toDate', 'confPer', 'status']"
+          [filterDelay]="0"
+          [scrollable]="true"
+          [first]="first"
+          [pageLinks]="5"
+          [showJumpToPageInput]="true"
+          (onFilter)="onFilter($event)"
+          (onSort)="onSort($event)"
+          (onLazyLoad)="pageChange($event)"
+          scrollHeight="650px"
+          size="small"
+          class="p-datatable-sm p-datatable-gridlines"
+          responsiveLayout="scroll"
+        >
+          <!-- Header Template -->
+          <ng-template pTemplate="header">
+            <tr class="table-style-v1">
+              <th class="!text-center" style="width: 60px;">T/r</th>
+              <th pSortableColumn="number" style="max-width: 240px;" class="!text-center text-[14px]">
+                <div class="flex items-center justify-center">
+                  Dalolatnoma raqami
+                  <app-table-sort field="number"></app-table-sort>
+                  <p-columnFilter type="text" field="number" display="menu"/>
+                </div>
+              </th>
+              <th pSortableColumn="fromDate" style="max-width: 240px;" class=" !text-center text-[14px]">
+                Sanadan
+                <app-table-sort field="fromDate"></app-table-sort>
+              </th>
+              <th pSortableColumn="toDate" style="max-width: 240px;" class="!text-center text-[14px]">
+                Sanagacha
+                <app-table-sort field="toDate"></app-table-sort>
+              </th>
+              <th pSortableColumn="status" style="max-width: 260px;" class="!text-center text-[14px]">
+                <div class="flex items-center justify-center">
+                  Holati
+                  <app-table-sort field="status"></app-table-sort>
+                  <p-columnFilter type="text" field="status" display="menu"/>
+                </div>
+              </th>
+              <th pSortableColumn="confPerType" style="min-width: 220px;" class="!text-center text-[14px]">Lavozim
+                <app-table-sort field="confPerType"></app-table-sort>
+              </th>
+              <th class="!text-center text-[14px]" style="width: 100px;">File</th>
+            </tr>
+          </ng-template>
+
+          <!-- Body Template -->
+          <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="!text-center text-xs">
+                {{ first + rowIndex + 1 }}
+              </td>
+              <td>
+                @if (!loading) {
+                  <div class="text-xs font-medium truncate" [title]="payment.number">
+                    {{ payment.number }}
+                  </div>
+                } @else {
+                  <p-skeleton width="100%"></p-skeleton>
+                }
+              </td>
+              <td>
+                @if (!loading) {
+                  <div class="text-xs truncate" [title]="payment.fromDate">
+                    {{ payment.fromDate | date: 'dd.MM.yyyy' }}
+                  </div>
+                } @else {
+                  <p-skeleton width="100%"></p-skeleton>
+                }
+              </td>
+              <td>
+                @if (!loading) {
+                  <div class="text-xs truncate" [title]="payment.toDate">
+                    {{ payment.toDate | date: 'dd.MM.yyyy' }}
+                  </div>
+                } @else {
+                  <p-skeleton width="100%"></p-skeleton>
+                }
+              </td>
+              <td class="!text-center">
+                @if (!loading) {
+                  <span
+                    class="inline-flex px-2 py-1 text-xs font-medium rounded-md border whitespace-nowrap cursor-pointer"
+                    [ngClass]="getStatusClass(payment.status)"
+                    (click)="showConfirmationDialog(payment.id)"
+                  >
+                  {{ getStatusLabel(payment.status) }}
+                </span>
+                } @else {
+                  <p-skeleton width="100%"></p-skeleton>
+                }
+              </td>
+              <td>
+
+                @if (!loading) {
+                  <div class="text-xs text-center  truncate" [title]=getconfPerTypeLabel(payment.confPerType)>
+                    {{ getconfPerTypeLabel(payment.confPerType) }}
+                  </div>
+                } @else {
+                  <p-skeleton width="100%"></p-skeleton>
+                }
+              </td>
+              <td class="!text-center">
+                @if (!loading) {
+                  <button
+                    (click)="viewFile(payment)"
+                    class="text-blue-600 hover:text-blue-800 transition-colors p-1"
+                    title="File ko'rish"
+                  >
+                    <i class="pi pi-file text-lg"></i>
+                  </button>
+                } @else {
+                  <p-skeleton width="100%"></p-skeleton>
+                }
+              </td>
+            </tr>
+          </ng-template>
+
+          <!-- Loading Template -->
+          @if (loading) {
+            <
+            <div class="absolute inset-0 bg-white/70 flex flex-col items-center justify-center z-10">
+              <i class="pi pi-spin pi-spinner text-4xl text-blue-500 mb-2" style="animation-duration: 0.5s;"></i>
+              <span class="text-sm text-gray-600">Маълумотлар юкланмоқда...</span>
+            </div>
+          }
+
+          <!-- Empty Message Template -->
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td [attr.colspan]="7" class="text-center py-10">
+                <div class="flex flex-col items-center justify-center p-6 text-gray-500">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       class="w-12 h-12 mb-2 text-gray-400"
+                       fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 17v-2h6v2H9zM12 3C7.03 3 3 7.03 3 12s4.03 9 9
+                     9 9-4.03 9-9-4.03-9-9-9z"/>
+                  </svg>
+                  <span>Ma'lumotlar topilmadi</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <!-- Paginator Template -->
+          <ng-template pTemplate="paginatorleft">
+            <div class="text-sm text-gray-700">Jami: {{ totalRecords }} ta</div>
+          </ng-template>
+
+          <ng-template pTemplate="paginatorright">
+            <div class="text-sm text-gray-600">{{ rows }} ta ko'rsatilmoqda</div>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-card>
+  </div>
+</p-card>
+
+<p-dialog
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [draggable]="true"
+  [resizable]="false"
+  appendTo="body"
+  [blockScroll]="true"
+  [closable]="true"
+  [dismissableMask]="false"
+  [maximizable]="true"
+  [showHeader]="true"
+  [style]="{ width: '70vw', minHeight: '40vh' }"
+  [contentStyle]="{ padding: '0', background: 'transparent' }"
+  [maskStyle]="{ backgroundColor: 'rgba(0,0,0,0.3)' }"
+  class="report-dialog"
+>
+  <ng-template #header class="!pb-0">
+    <div class="bg-white dark:bg-gray-800">
+      <div class="">
+        <div class="flex gap-3">
+          <div>
+            <p class="text-xs mb-1">
+              Моззонавий кредиторлар СТИРи/ЭССИНи:
+            </p>
+            <p class="text-xs mb-1">
+              Моззонавий кредиторнинг номи:
+            </p>
+            <p class="text-xs mb-1">
+              Дави:
+            </p>
+            <p class="text-xs mb-3">
+              Тўл рақами:
+            </p>
+          </div>
+          <div class="text-[var(--p-primary-color)]">
+            <p class="text-xs mb-1">
+              304378612
+            </p>
+            <p class="text-xs mb-1">
+              "TOSHKENT METALLURGIYA ZAVODI" MCHJ
+            </p>
+            <p class="text-xs mb-1">
+              01.01.2025-25.06.2025
+            </p>
+            <p class="text-xs mb-3">
+              0.99996E+11
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="h-full flex flex-col">
+    <!-- File name header -->
+    <h2 class="text-lg text-center font-bold">
+      <span class="text-[var(--p-primary-color)]">"TOSHKENT METALLURGIYA ZAVODI" MCHJ</span> ва Божхона қўмитаси бирикса
+      тўлилган
+      <br>
+      СОЛИШТИРУБ ДОЛАЛАТНОМАСИ
+    </h2>
+
+    <p-table
+      #dt
+      [value]="payments"
+      size="small"
+      [rows]="15"
+      [totalRecords]="totalRecords"
+      [loading]="loading"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{totalPages} ta dan {currentPage}-sahifa, jami {totalRecords} ta dan {first}-{last} gacha"
+      [rowsPerPageOptions]="[15, 25, 50, 100]"
+      [filterDelay]="500"
+      [scrollable]="true"
+      scrollHeight="340px"
+      class="p-datatable-sm p-datatable-gridlines px-4 bg-gray-100 py-3"
+      responsiveLayout="scroll">
+
+      <!-- Header Template -->
+      <ng-template pTemplate="header" class="">
+        <tr class="table-style-v1_dialog text-sm">
+          <th class="!text-center" style="width: 60px;">T/r</th>
+          <th pSortableColumn="number"
+              class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Dalolatnoma raqami
+          </th>
+          <th pSortableColumn="fromDate"
+              class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Sanadan
+          </th>
+          <th pSortableColumn="toDate" style="max-width: 240px;"
+              class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Sanagacha
+          </th>
+          <th pSortableColumn="status" style="max-width: 260px;"
+              class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">
+            Holati
+          </th>
+          <th class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">Lavozim</th>
+          <th class="max-w-[200px] truncate whitespace-nowrap overflow-hidden text-center text-[12px]">File</th>
+        </tr>
+      </ng-template>
+
+      <!-- Body Template -->
+      <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
+        <tr class="text-sm">
+          <td class="!text-center !py-0 text-[12px]">{{ rowIndex + 1 }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]"> {{ payment.number }}</td>
+
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ payment.fromDate | date: 'dd.MM.yyyy' }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]"> {{ payment.toDate | date: 'dd.MM.yyyy' }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ getStatusLabel(payment.status) }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]">{{ getconfPerTypeLabel(payment.confPerType) }}</td>
+          <td class="!text-center !p-3 !py-0 text-[12px]"><i class="pi pi-file text-lg"></i></td>
+        </tr>
+      </ng-template>
+
+      <!-- Loading Template -->
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="9">
+            <div class="flex items-center justify-center p-4">
+              <p-skeleton width="100%" height="3rem"></p-skeleton>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Empty Message Template -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" class="text-center w-full py-10">
+            <div class="w-full flex justify-center">
+              <div class="text-center">
+                <img src="./assets/images/empty.png" alt="Malumot topilmadi">
+                <p class="text-xl mb-10">Ma'lumotlar shakllanmagan!</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+  <!-- Dialog Footer -->
+  <ng-template #footer let-dialog>
+    <div class="w-full flex justify-between items-center px-0 pt-4 ">
+      <!-- Signatures -->
+      <div class="flex gap-4 items-end w-1/3">
+        <!-- Select -->
+        <div class="">
+          <p class="font-semibold mb-2">Buxgalter :</p>
+          <p class="font-semibold">Direktor :</p>
+        </div>
+
+        <!-- Input -->
+        <div class="">
+          <p class="mb-2">Abdullayev </p>
+          <div class="flex items-center gap-3">
+            <p class="">Mardiyev</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Qr -->
+      <div class="text-[14px] flex items-center gap-3">
+        <div class="border w-12 h-12 flex items-center justify-center">
+
+        </div>
+        <div>
+          <p>Sana: 12.01.2026</p>
+          <p>Holati: Tasdiqlanmagan</p>
+        </div>
+      </div>
+
+      <form class="w-1/3 flex justify-end">
+        <!-- Buttons -->
+        <div class="flex gap-4">
+          <p-button size="small" label="Qaytarish" severity="secondary" outlined icon="pi pi-undo"></p-button>
+          <p-button
+            size="small"
+            label="Jo'natish"
+            icon="pi pi-send"
+            type="button"
+            (onClick)="onSendReviseToConfirm()"
+          ></p-button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+</p-dialog>

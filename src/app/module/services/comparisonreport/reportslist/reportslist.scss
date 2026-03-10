@@ -1,0 +1,25 @@
+
+.table-style-v1 th {
+  background-color: color-mix(in srgb, var(--p-primary-color), transparent 70%);
+  border-right: 1.5px dashed  var(--p-primary-color) !important;
+  border-bottom: 1.5px dashed  var(--p-primary-color) !important;
+}
+
+.table-style-v1-row2 th {
+  height: 27px;
+  background-color: #EDF3FF !important;
+  border-right: none !important;
+  color: #4680FF !important;
+  border-bottom:none !important;
+  text-align: center !important;
+}
+
+.table-style-v1 td {
+  border-left: none;
+  border-right: none;
+}
+
+.table-style-v1 td div {
+  padding: 2px 0 !important;
+  color: #303c5c ;
+}
